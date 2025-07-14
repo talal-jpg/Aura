@@ -2,4 +2,28 @@
 
 
 #include "Player/MyPlayerController.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
+void AMyPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	EnhancedInputLocalPlayerSubsystem->AddMappingContext(PlayerInputMappingContext,1);
+
+	if (InputComponent)
+	{
+		UEnhancedInputComponent* EnhancedInputComponent= Cast<UEnhancedInputComponent>(InputComponent);
+		EnhancedInputComponent->BindAction(IA_Move,ETriggerEvent::Triggered,this,&AMyPlayerController::Move);
+	}
+}
+
+void AMyPlayerController::Move(const FInputActionValue& Value)
+{
+	FVector2D Val=Value.Get<FVector2D>();
+	FRotator Rot=FRotator(0,GetControlRotation().Yaw,0);
+	FVector Forward= FRotationMatrix(Rot).GetUnitAxis(EAxis::X);
+	FVector Side= FRotationMatrix(Rot).GetUnitAxis(EAxis::Y);
+	GetPawn()->AddMovementInput(Forward,Val.X);
+	GetPawn()->AddMovementInput(Side,Val.Y);
+}
