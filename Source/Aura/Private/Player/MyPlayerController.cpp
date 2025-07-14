@@ -51,10 +51,10 @@ void AMyPlayerController::CursorTrace()
 	FHitResult CursorHitResult;
 	GetHitResultUnderCursor(ECC_Visibility,false,CursorHitResult);
 	LastActor=ThisActor;
-	if (!CursorHitResult.bBlockingHit)return;
-	ICursorHitInterface* HitActor=Cast<ICursorHitInterface>(CursorHitResult.GetActor());
-	if (!HitActor)return;
-	ThisActor=HitActor;
+	if (CursorHitResult.bBlockingHit)
+	{
+		ThisActor= Cast<ICursorHitInterface>(CursorHitResult.GetActor());
+	}
 	if (LastActor!=ThisActor)
 	{
 		if (LastActor)
