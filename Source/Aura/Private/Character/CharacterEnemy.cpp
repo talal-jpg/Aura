@@ -17,3 +17,13 @@ void ACharacterEnemy::BeginPlay()
 	Super::BeginPlay();
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
+
+void ACharacterEnemy::Highlight()
+{
+	bIsHighlighted=true;
+}
+
+void ACharacterEnemy::UnHighlight()
+{
+	bIsHighlighted=false;
+}

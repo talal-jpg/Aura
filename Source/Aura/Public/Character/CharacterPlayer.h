@@ -15,6 +15,13 @@ class AURA_API ACharacterPlayer : public ACharacterBase
 	GENERATED_BODY()
 
 	public:
+	ACharacterPlayer();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<USpringArmComponent> CameraArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UCameraComponent> Camera;
 
 	virtual void PossessedBy(AController* NewController) override;
 

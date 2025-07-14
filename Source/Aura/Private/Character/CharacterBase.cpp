@@ -12,10 +12,6 @@ ACharacterBase::ACharacterBase()
 	WeaponMesh=CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
 	WeaponMesh->SetupAttachment(GetMesh(),FName("HandSocket"));
 
-	Camera=CreateDefaultSubobject<UCameraComponent>("Camera");
-	CameraArm= CreateDefaultSubobject<USpringArmComponent>("CameraArm");
-	Camera->SetupAttachment(CameraArm);
-	CameraArm->SetupAttachment(GetRootComponent());
 }
 
 

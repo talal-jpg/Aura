@@ -2,8 +2,20 @@
 
 
 #include "Player/MyPlayerController.h"
+
+#include <functional>
+
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Interface/CursorHitInterface.h"
+
+AMyPlayerController::AMyPlayerController()
+{
+	bShowMouseCursor = true;
+	DefaultMouseCursor= EMouseCursor::Default;
+	FInputModeGameAndUI InputMode;
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+}
 
 void AMyPlayerController::SetupInputComponent()
 {
@@ -18,6 +30,12 @@ void AMyPlayerController::SetupInputComponent()
 	}
 }
 
+void AMyPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	CursorTrace();
+}
+
 void AMyPlayerController::Move(const FInputActionValue& Value)
 {
 	FVector2D Val=Value.Get<FVector2D>();
@@ -26,4 +44,26 @@ void AMyPlayerController::Move(const FInputActionValue& Value)
 	FVector Side= FRotationMatrix(Rot).GetUnitAxis(EAxis::Y);
 	GetPawn()->AddMovementInput(Forward,Val.X);
 	GetPawn()->AddMovementInput(Side,Val.Y);
+}
+
+void AMyPlayerController::CursorTrace()
+{
+	FHitResult CursorHitResult;
+	GetHitResultUnderCursor(ECC_Visibility,false,CursorHitResult);
+	LastActor=ThisActor;
+	if (!CursorHitResult.bBlockingHit)return;
+	ICursorHitInterface* HitActor=Cast<ICursorHitInterface>(CursorHitResult.GetActor());
+	if (!HitActor)return;
+	ThisActor=HitActor;
+	if (LastActor!=ThisActor)
+	{
+		if (LastActor)
+		{
+			LastActor->UnHighlight();
+		}
+		if (ThisActor)
+		{
+			ThisActor->Highlight();
+		}
+	}
 }

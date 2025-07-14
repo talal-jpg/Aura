@@ -4,7 +4,17 @@
 #include "Character/CharacterPlayer.h"
 
 #include "AbilitySystemComponent.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Player/MyPlayerState.h"
+
+ACharacterPlayer::ACharacterPlayer()
+{
+	Camera=CreateDefaultSubobject<UCameraComponent>("Camera");
+	CameraArm= CreateDefaultSubobject<USpringArmComponent>("CameraArm");
+	Camera->SetupAttachment(CameraArm);
+	CameraArm->SetupAttachment(GetRootComponent());
+}
 
 void ACharacterPlayer::PossessedBy(AController* NewController)
 {
