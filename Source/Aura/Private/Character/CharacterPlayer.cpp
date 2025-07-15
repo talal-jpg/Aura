@@ -6,7 +6,11 @@
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Player/MyPlayerController.h"
 #include "Player/MyPlayerState.h"
+#include "UI/MyHUD.h"
+#include "UI/WidgetController/MyWidgetController.h"
+
 
 ACharacterPlayer::ACharacterPlayer()
 {
@@ -32,5 +36,9 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 {
 	AbilitySystemComponent= GetPlayerState<AMyPlayerState>()->GetAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState<AMyPlayerState>(),this);
-	AttributeSet= GetPlayerState<AMyPlayerState>()->AttributeSet;
+	AMyPlayerState* PS= GetPlayerState<AMyPlayerState>();
+	AttributeSet= PS->AttributeSet;
+	APlayerController* PC= GetController<AMyPlayerController>();
+	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,AbilitySystemComponent,AttributeSet);
+	PC->GetHUD<AMyHUD>()->InitOverlay(WCParams);
 }
