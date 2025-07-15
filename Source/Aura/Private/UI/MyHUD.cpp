@@ -28,5 +28,6 @@ void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 	UAttributeSet* AS= PS->AttributeSet;
 	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,ASC,AS);
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
+	OverlayUserWidget->AddToViewport();
 }
 

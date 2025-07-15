@@ -26,10 +26,10 @@ class AURA_API AMyHUD : public AHUD
 	UPROPERTY()
 	UMyUserWidget* OverlayUserWidget;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="UI")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,Category="UI")
 	TSubclassOf<UMyUserWidget> OverlayUserWidgetClass;
 	
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
