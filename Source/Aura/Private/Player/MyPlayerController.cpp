@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Interface/CursorHitInterface.h"
+#include "Player/MyEnhancedInputComponent.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -25,8 +26,9 @@ void AMyPlayerController::SetupInputComponent()
 
 	if (InputComponent)
 	{
-		UEnhancedInputComponent* EnhancedInputComponent= Cast<UEnhancedInputComponent>(InputComponent);
-		EnhancedInputComponent->BindAction(IA_Move,ETriggerEvent::Triggered,this,&AMyPlayerController::Move);
+		UMyEnhancedInputComponent* MyEnhancedInputComponent= Cast<UMyEnhancedInputComponent>(InputComponent);
+		MyEnhancedInputComponent->BindAction(IA_Move,ETriggerEvent::Triggered,this,&AMyPlayerController::Move);
+		MyEnhancedInputComponent->BindInputAbilityAction(this,DA_InputConfig,&ThisClass::InputPressed,&ThisClass::InputHeld,&ThisClass::InputReleased);
 	}
 }
 
@@ -66,4 +68,17 @@ void AMyPlayerController::CursorTrace()
 			ThisActor->Highlight();
 		}
 	}
+}
+
+void AMyPlayerController::InputPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1,10,FColor::Red,InputTag.ToString());
+}
+
+void AMyPlayerController::InputHeld(FGameplayTag InputTag)
+{
+}
+
+void AMyPlayerController::InputReleased(FGameplayTag InputTag)
+{
 }
