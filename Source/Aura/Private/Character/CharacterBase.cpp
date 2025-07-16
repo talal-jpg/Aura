@@ -11,7 +11,7 @@ ACharacterBase::ACharacterBase()
 {
 	WeaponMesh=CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
 	WeaponMesh->SetupAttachment(GetMesh(),FName("HandSocket"));
-
+	bReplicates = true;
 }
 
 

@@ -5,10 +5,12 @@
 
 #include <functional>
 
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Interface/CursorHitInterface.h"
 #include "Player/MyEnhancedInputComponent.h"
+#include "Player/MyPlayerState.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -72,7 +74,15 @@ void AMyPlayerController::CursorTrace()
 
 void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(-1,10,FColor::Red,InputTag.ToString());
+	GEngine->AddOnScreenDebugMessage(5,10,FColor::Red,InputTag.ToString());
+	UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
+	for (auto Ability:ASC->GetActivatableAbilities())
+	{
+		FGameplayAbilitySpecHandle AbilitySpecHandle;
+		ASC->TryActivateAbility(Ability.Handle);
+		Ability.InputPressed=true;
+	}
+	
 }
 
 void AMyPlayerController::InputHeld(FGameplayTag InputTag)

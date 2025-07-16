@@ -38,7 +38,18 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState<AMyPlayerState>(),this);
 	AMyPlayerState* PS= GetPlayerState<AMyPlayerState>();
 	AttributeSet= PS->AttributeSet;
+	GiveStartUpAbilities();
 	APlayerController* PC= GetController<AMyPlayerController>();
 	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,AbilitySystemComponent,AttributeSet);
 	PC->GetHUD<AMyHUD>()->InitOverlay(WCParams);
+}
+
+void ACharacterPlayer::GiveStartUpAbilities()
+{
+	for (auto Ability : StartUpAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec=AbilitySystemComponent->BuildAbilitySpecFromClass(Ability);
+		
+		FGameplayAbilitySpecHandle AbilitySpecHandle=AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
 }

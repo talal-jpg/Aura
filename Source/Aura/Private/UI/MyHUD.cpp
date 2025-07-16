@@ -13,7 +13,7 @@ UOverlayWidgetController* AMyHUD::GetOverlayWidgetController(const FWidgetContro
 {
 	if (OverlayWidgetController == nullptr)
 	{
-		OverlayWidgetController=NewObject<UOverlayWidgetController>(this,OverlayWidgetControllerClass);
+		OverlayWidgetController=NewObject<UOverlayWidgetController>(WCParams.PlayerController,OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
 	}
 	return OverlayWidgetController;
@@ -21,13 +21,15 @@ UOverlayWidgetController* AMyHUD::GetOverlayWidgetController(const FWidgetContro
 
 void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 {
-	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(GetWorld(),OverlayUserWidgetClass));
-	APlayerController* PC = GetOwningPlayerController();
-	AMyPlayerState* PS= PC->GetPlayerState<AMyPlayerState>();
-	UAbilitySystemComponent* ASC=PS->AbilitySystemComponent;
-	UAttributeSet* AS= PS->AttributeSet;
-	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,ASC,AS);
+	FWidgetControllerParams WCParams= FWidgetControllerParams(Params);
+	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));
+	if (OverlayUserWidget == nullptr)return;
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 	OverlayUserWidget->AddToViewport();
+}
+
+void AMyHUD::BeginPlay()
+{
+	Super::BeginPlay();
 }
 

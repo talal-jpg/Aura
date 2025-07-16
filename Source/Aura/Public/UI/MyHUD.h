@@ -20,6 +20,8 @@ class AURA_API AMyHUD : public AHUD
 	public:
 	void InitOverlay(const FWidgetControllerParams& Params );
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY()
 	UOverlayWidgetController* OverlayWidgetController;
 
