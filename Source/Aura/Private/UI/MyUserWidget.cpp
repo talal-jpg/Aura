@@ -6,4 +6,6 @@
 void UMyUserWidget::SetWidgetController(UMyWidgetController* InWidgetController)
 {
 	WidgetController = InWidgetController;
+	WidgetControllerSet();
 }
+

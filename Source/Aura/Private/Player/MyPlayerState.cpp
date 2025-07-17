@@ -2,12 +2,13 @@
 
 
 #include "Player/MyPlayerState.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/MyAbilitySystemComponent.h"
+#include "AbilitySystem/MyAttributeSet.h"
 
 AMyPlayerState::AMyPlayerState()
 {
-	AbilitySystemComponent=CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
-	AttributeSet= CreateDefaultSubobject<UAttributeSet>("AttributeSet");
+	AbilitySystemComponent=CreateDefaultSubobject<UMyAbilitySystemComponent>("AbilitySystemComponent");
+	AttributeSet= CreateDefaultSubobject<UMyAttributeSet>("AttributeSet");
 	SetReplicates(true);
 }
 

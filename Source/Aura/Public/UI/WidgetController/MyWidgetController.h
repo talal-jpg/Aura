@@ -33,7 +33,7 @@ struct FWidgetControllerParams
 	UAttributeSet* AttributeSet;
 
 };
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class AURA_API UMyWidgetController : public UObject
 {
 	GENERATED_BODY()

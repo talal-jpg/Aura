@@ -17,9 +17,13 @@ class AURA_API UMyUserWidget : public UUserWidget
 
 	public:
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	UMyWidgetController* WidgetController;
 
+	UFUNCTION(BlueprintCallable)
 	void SetWidgetController(UMyWidgetController* InWidgetController);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void WidgetControllerSet();
 
 };

@@ -2,13 +2,13 @@
 
 
 #include "Character/CharacterEnemy.h"
-
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/MyAbilitySystemComponent.h"
+#include "AbilitySystem/MyAttributeSet.h"
 
 ACharacterEnemy::ACharacterEnemy()
 {
-	AbilitySystemComponent=CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
-	AttributeSet= CreateDefaultSubobject<UAttributeSet>("AttributeSet");
+	AbilitySystemComponent=CreateDefaultSubobject<UMyAbilitySystemComponent>("AbilitySystemComponent");
+	AttributeSet= CreateDefaultSubobject<UMyAttributeSet>("AttributeSet");
 	
 }
 

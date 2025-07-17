@@ -27,13 +27,27 @@ public:
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Health)
 	
+	UPROPERTY(ReplicatedUsing= OnRep_MaxHealth)
+	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxHealth)
+	
 	UPROPERTY(ReplicatedUsing= OnRep_Mana)
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Mana)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_MaxMana)
+	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxMana)
 
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_Health(const FGameplayAttributeData& OldValue) const;
 	
 	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_Mana(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_MaxMana(const FGameplayAttributeData& OldValue) const;
 };

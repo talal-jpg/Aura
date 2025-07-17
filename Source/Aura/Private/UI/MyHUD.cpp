@@ -2,7 +2,6 @@
 
 
 #include "UI/MyHUD.h"
-
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/MyPlayerState.h"
@@ -23,9 +22,17 @@ void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 {
 	FWidgetControllerParams WCParams= FWidgetControllerParams(Params);
 	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));
-	if (OverlayUserWidget == nullptr)return;
+	if (OverlayUserWidget == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(2,10,FColor::Yellow,"Unable to create OverlayUserWidget");
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(2,10,FColor::Yellow,"OverlayUserWidget Created");
+	}
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 	OverlayUserWidget->AddToViewport();
+	GetOverlayWidgetController(WCParams)->BroadcastInitialValues();
 }
 
 void AMyHUD::BeginPlay()
