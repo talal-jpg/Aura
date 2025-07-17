@@ -20,28 +20,47 @@ ACharacterPlayer::ACharacterPlayer()
 	CameraArm->SetupAttachment(GetRootComponent());
 }
 
+void ACharacterPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	if (!HasAuthority())
+	{
+		// InitOverlay();
+	}
+}
+
 void ACharacterPlayer::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfoAndSetASCASMemberVars();
+	// GiveStartUpAbilities();
+	// InitOverlay();
 }
 
 void ACharacterPlayer::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitAbilityActorInfoAndSetASCASMemberVars();
+	// GiveStartUpAbilities();
+	
 }
 
 void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 {
-	AbilitySystemComponent= GetPlayerState<AMyPlayerState>()->GetAbilitySystemComponent();
+	AMyPlayerState* PS=GetPlayerState<AMyPlayerState>();	
+	AbilitySystemComponent= PS->GetAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState<AMyPlayerState>(),this);
-	AMyPlayerState* PS= GetPlayerState<AMyPlayerState>();
 	AttributeSet= PS->AttributeSet;
-	GiveStartUpAbilities();
 	APlayerController* PC= GetController<AMyPlayerController>();
 	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,AbilitySystemComponent,AttributeSet);
-	PC->GetHUD<AMyHUD>()->InitOverlay(WCParams);
+	if (PC)// have to check PC with an if here because only on server all the PCs are present and on all the clients every client only has one 
+	{
+		if (AMyHUD* MyHUD=PC->GetHUD<AMyHUD>())
+		{
+			MyHUD->InitOverlay(WCParams);
+			
+		}
+	}
 }
 
 void ACharacterPlayer::GiveStartUpAbilities()
@@ -53,3 +72,4 @@ void ACharacterPlayer::GiveStartUpAbilities()
 		FGameplayAbilitySpecHandle AbilitySpecHandle=AbilitySystemComponent->GiveAbility(AbilitySpec);
 	}
 }
+

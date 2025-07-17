@@ -9,6 +9,8 @@ AMyPlayerState::AMyPlayerState()
 {
 	AbilitySystemComponent=CreateDefaultSubobject<UMyAbilitySystemComponent>("AbilitySystemComponent");
 	AttributeSet= CreateDefaultSubobject<UMyAttributeSet>("AttributeSet");
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	SetReplicates(true);
 }
 

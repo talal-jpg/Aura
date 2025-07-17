@@ -22,14 +22,6 @@ void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 {
 	FWidgetControllerParams WCParams= FWidgetControllerParams(Params);
 	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));
-	if (OverlayUserWidget == nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(2,10,FColor::Yellow,"Unable to create OverlayUserWidget");
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(2,10,FColor::Yellow,"OverlayUserWidget Created");
-	}
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 	OverlayUserWidget->AddToViewport();
 	GetOverlayWidgetController(WCParams)->BroadcastInitialValues();

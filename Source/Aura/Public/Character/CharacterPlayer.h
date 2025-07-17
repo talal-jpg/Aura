@@ -17,6 +17,8 @@ class AURA_API ACharacterPlayer : public ACharacterBase
 
 	public:
 	ACharacterPlayer();
+
+	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> CameraArm;
