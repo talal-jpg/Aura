@@ -8,7 +8,9 @@
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "AbilitySystem/MyGameplayTags.h"
 #include "Interface/CursorHitInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Player/MyEnhancedInputComponent.h"
 #include "Player/MyPlayerState.h"
 
@@ -82,7 +84,6 @@ void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 		ASC->TryActivateAbility(Ability.Handle);
 		Ability.InputPressed=true;
 	}
-	
 }
 
 void AMyPlayerController::InputHeld(FGameplayTag InputTag)

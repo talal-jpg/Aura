@@ -3,7 +3,10 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AbilitySystem/MyAbilitySystemComponent.h"
 #include "AbilitySystem/MyAttributeSet.h"
+#include "AbilitySystem/MyGameplayTags.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -19,6 +22,19 @@ void UOverlayWidgetController::BindCallbackToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetMaxHealthAttribute()).AddUObject(this,&ThisClass::OnMaxHealthChange);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetManaAttribute()).AddUObject(this,&ThisClass::OnManaChange);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetMaxManaAttribute()).AddUObject(this,&ThisClass::OnMaxManaChange);
+
+	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->OnGameplayEffectAppliedBroadcastAssetTagsDelegate.AddLambda(
+		[this](FGameplayTagContainer GEAssetTags)
+		{
+			for (FGameplayTag AssetTag : GEAssetTags)
+			{
+
+				FName RowName= AssetTag.GetTagName();
+				FPopUpWidgetInfo* PopUpWidgetInfo=DT_PopUpWidgetInfo->FindRow<FPopUpWidgetInfo>(RowName,TEXT(""));
+				OnGameplayEffectAppliedBroadcastPopUpWidgetInfoDelegate.Broadcast(*PopUpWidgetInfo);
+			}
+		}
+	);
 }
 
 UMyAttributeSet* UOverlayWidgetController::GetMyAttributeSet()

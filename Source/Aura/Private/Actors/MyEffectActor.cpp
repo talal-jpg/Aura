@@ -31,6 +31,11 @@ void AMyEffectActor::OnOverlap(AActor* OtherActor)
 		if (EffectApplicationPolicy==EEffectApplicationPolicy::ApplyOnOverlap)
 		{
 			FGameplayEffectContextHandle ContextHandle;
+			if (!GameplayEffectClass)
+			{
+				UKismetSystemLibrary::PrintString(this,"PleaseAddGameplayEffectClassForTheEffectToApply");
+				return;
+			};
 			FGameplayEffectSpecHandle GESpecHandle = OtherActorsAsc->MakeOutgoingSpec(GameplayEffectClass, 1, ContextHandle);
 			FGameplayEffectSpec* GESpec = GESpecHandle.Data.Get();
 			

@@ -9,9 +9,14 @@
 /**
  * 
  */
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameplayEffectApplliedBroadcastAssetTagsDelegateSignature,FGameplayTagContainer GEAssetTags);
 UCLASS()
 class AURA_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+	public:
+	UMyAbilitySystemComponent();
+
+	FOnGameplayEffectApplliedBroadcastAssetTagsDelegateSignature OnGameplayEffectAppliedBroadcastAssetTagsDelegate;
 	
 };

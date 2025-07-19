@@ -18,6 +18,11 @@ struct FMyGameplayTags
 
 	FGameplayTag Input_LMB;
 
+	FGameplayTag Message_HealthPotion;
+	FGameplayTag Message_ManaPotion;
+	FGameplayTag Message_Fire;
+	
+
 	private:
 	protected:
 	static FMyGameplayTags GameplayTags;
