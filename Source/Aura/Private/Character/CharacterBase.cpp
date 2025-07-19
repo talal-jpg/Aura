@@ -14,6 +14,11 @@ ACharacterBase::ACharacterBase()
 	bReplicates = true;
 }
 
+UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 
 
 

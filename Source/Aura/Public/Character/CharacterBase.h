@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
@@ -12,7 +13,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class AURA_API ACharacterBase : public ACharacter
+class AURA_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -32,5 +33,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAttributeSet* AttributeSet;
+
+	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 };

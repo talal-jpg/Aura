@@ -25,6 +25,7 @@ void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 	OverlayUserWidget->AddToViewport();
 	GetOverlayWidgetController(WCParams)->BroadcastInitialValues();
+	GetOverlayWidgetController(WCParams)->BindCallbackToDependencies();
 }
 
 void AMyHUD::BeginPlay()

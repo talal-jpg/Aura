@@ -16,6 +16,7 @@ struct FWidgetControllerParams
 {
 	GENERATED_BODY()
 	public:
+	
 	FWidgetControllerParams(){};
 	FWidgetControllerParams(APlayerController* PC,APlayerState* PS,UAbilitySystemComponent* ASC,UAttributeSet* AS ): PlayerController(PC),PlayerState(PS), AbilitySystemComponent(ASC), AttributeSet(AS)
 	{
@@ -55,4 +56,8 @@ class AURA_API UMyWidgetController : public UObject
 
 	UPROPERTY()
 	APlayerState* PlayerState;
+
+	protected:
+	virtual void BroadcastInitialValues();
+	virtual void BindCallbackToDependencies();
 };

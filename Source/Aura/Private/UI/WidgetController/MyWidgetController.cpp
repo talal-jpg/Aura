@@ -12,3 +12,11 @@ void UMyWidgetController::SetWidgetControllerParams(const FWidgetControllerParam
 	WidgetControllerParamsSet();
 }
 
+void UMyWidgetController::BroadcastInitialValues()
+{
+}
+
+void UMyWidgetController::BindCallbackToDependencies()
+{
+}
+

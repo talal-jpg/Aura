@@ -6,6 +6,7 @@
 #include "UI/WidgetController/MyWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
+struct FOnAttributeChangeData;
 class UMyAttributeSet;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangeDelegateSignature, float, Health);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangeDelegateSignature, float, MaxHealth );
@@ -20,7 +21,9 @@ class AURA_API UOverlayWidgetController : public UMyWidgetController
 	GENERATED_BODY()
 
 	public:
-	void BroadcastInitialValues();
+	virtual void BroadcastInitialValues() override;
+	
+	virtual void BindCallbackToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChangeDelegateSignature OnHealthChangeDelegate;
@@ -38,5 +41,10 @@ class AURA_API UOverlayWidgetController : public UMyWidgetController
 	UMyAttributeSet* MyAttributeSet;
 
 	UMyAttributeSet* GetMyAttributeSet();
+
+	void OnHeathChange(const FOnAttributeChangeData& HealthData);
+	void OnMaxHealthChange(const FOnAttributeChangeData& MaxHealthData);
+	void OnManaChange(const FOnAttributeChangeData& ManaData);
+	void OnMaxManaChange(const FOnAttributeChangeData& MaxManaData);
 	
 };
