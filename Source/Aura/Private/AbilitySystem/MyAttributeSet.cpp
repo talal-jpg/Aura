@@ -4,6 +4,7 @@
 #include "AbilitySystem/MyAttributeSet.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/MyGameplayTags.h"
 #include "Net/UnrealNetwork.h"
 
 UMyAttributeSet::UMyAttributeSet()
@@ -12,6 +13,12 @@ UMyAttributeSet::UMyAttributeSet()
 	InitMaxHealth(100);
 	InitMana(50);
 	InitMaxMana(100);
+	
+	AttributeGameplayTagMap.Add(FMyGameplayTags::Get().Attribute_Vital_Health,GetHealthAttribute());
+	AttributeGameplayTagMap.Add(FMyGameplayTags::Get().Attribute_Vital_MaxHealth,GetMaxHealthAttribute());
+	AttributeGameplayTagMap.Add(FMyGameplayTags::Get().Attribute_Vital_Mana,GetManaAttribute());
+	AttributeGameplayTagMap.Add(FMyGameplayTags::Get().Attribute_Vital_MaxMana,GetMaxManaAttribute());
+	
 }
 
 void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

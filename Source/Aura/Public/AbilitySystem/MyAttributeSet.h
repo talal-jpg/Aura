@@ -50,4 +50,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue) const;
+
+	TMap<FGameplayTag,FGameplayAttribute> AttributeGameplayTagMap;
 };

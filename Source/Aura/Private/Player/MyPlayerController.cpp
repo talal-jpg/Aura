@@ -8,6 +8,7 @@
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "AbilitySystem/MyAttributeSet.h"
 #include "AbilitySystem/MyGameplayTags.h"
 #include "Interface/CursorHitInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -76,6 +77,14 @@ void AMyPlayerController::CursorTrace()
 
 void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 {
+	AMyPlayerState* MyPlayerState=GetPlayerState<AMyPlayerState>();
+	const UMyAttributeSet* MyAttributeSet= Cast<UMyAttributeSet>(MyPlayerState->AttributeSet);
+	for (auto Pair:MyAttributeSet->AttributeGameplayTagMap)
+	{
+		FString String=Pair.Key.GetTagName().ToString();
+		UKismetSystemLibrary::PrintString(this,String);
+	}
+	
 	GEngine->AddOnScreenDebugMessage(5,10,FColor::Red,InputTag.ToString());
 	UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
 	for (auto Ability:ASC->GetActivatableAbilities())

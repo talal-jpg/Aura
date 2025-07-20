@@ -16,6 +16,11 @@ struct FMyGameplayTags
 
 	static void InitializeGameplayTags();
 
+	FGameplayTag Attribute_Vital_Health;
+	FGameplayTag Attribute_Vital_Mana;
+	FGameplayTag Attribute_Vital_MaxHealth;
+	FGameplayTag Attribute_Vital_MaxMana;
+	
 	FGameplayTag Input_LMB;
 
 	FGameplayTag Message_HealthPotion;

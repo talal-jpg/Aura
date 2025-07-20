@@ -3,8 +3,13 @@
 
 #include "AbilitySystem/MyAbilitySystemComponent.h"
 
+#include "AbilitySystem/MyAttributeSet.h"
+
 UMyAbilitySystemComponent::UMyAbilitySystemComponent()
 {
+	/**
+	 *PopUpWidgetDoesntHaveAControllerThatIsWhyWeBroadcastDelegateHere
+	 */
 	OnGameplayEffectAppliedDelegateToSelf.AddLambda(
 		[this](UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
 		{

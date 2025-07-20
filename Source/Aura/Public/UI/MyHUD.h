@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "MyHUD.generated.h"
 
+class UAttributeMenuWidgetController;
 class UMyUserWidget;
 struct FWidgetControllerParams;
 class UOverlayWidgetController;
@@ -26,6 +27,9 @@ class AURA_API AMyHUD : public AHUD
 	UOverlayWidgetController* OverlayWidgetController;
 
 	UPROPERTY()
+	UAttributeMenuWidgetController* AttributeMenuWidgetController;
+
+	UPROPERTY()
 	UMyUserWidget* OverlayUserWidget;
 
 	UPROPERTY(EditAnywhere, Category="UI")
@@ -33,6 +37,11 @@ class AURA_API AMyHUD : public AHUD
 
 	UPROPERTY(EditAnywhere,Category="UI")
 	TSubclassOf<UMyUserWidget> OverlayUserWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category="UI")
+	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
 	
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+
+	UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams);
 };

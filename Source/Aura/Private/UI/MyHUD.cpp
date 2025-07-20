@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Player/MyPlayerState.h"
 #include "UI/MyUserWidget.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* AMyHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
@@ -18,10 +19,20 @@ UOverlayWidgetController* AMyHUD::GetOverlayWidgetController(const FWidgetContro
 	return OverlayWidgetController;
 }
 
+UAttributeMenuWidgetController* AMyHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (AttributeMenuWidgetController== nullptr)
+	{
+		AttributeMenuWidgetController=NewObject<UAttributeMenuWidgetController>(WCParams.PlayerController,AttributeMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+	}
+	return AttributeMenuWidgetController;
+}
+
 void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 {
 	FWidgetControllerParams WCParams= FWidgetControllerParams(Params);
-	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));
+	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));ImageParallelForComputeNumJobsForPixels()
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 	OverlayUserWidget->AddToViewport();
 	GetOverlayWidgetController(WCParams)->BroadcastInitialValues();
