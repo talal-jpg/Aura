@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
 
+class USplineComponent;
 struct FGameplayTag;
 class UDA_InputConfig;
 class ICursorHitInterface;
@@ -38,6 +39,8 @@ class AURA_API AMyPlayerController : public APlayerController
 
 	void Move(const FInputActionValue& Value);
 
+	void AutoMove();
+
 	void CursorTrace();
 
 	void InputPressed( FGameplayTag InputTag);
@@ -46,4 +49,14 @@ class AURA_API AMyPlayerController : public APlayerController
 
 	ICursorHitInterface* ThisActor=nullptr;
 	ICursorHitInterface* LastActor=nullptr;
+
+	float HeldTime=0;
+	float ShortPressThreshold=.5f;
+	FVector CachedDestination=FVector::ZeroVector;
+	float AcceptableDistance=90.f;
+	bool bIsAutoMoving=false;
+	
+	UPROPERTY()
+	USplineComponent* Spline;
+	
 };

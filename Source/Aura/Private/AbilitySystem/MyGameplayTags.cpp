@@ -16,7 +16,18 @@ void FMyGameplayTags::InitializeGameplayTags()
 	GameplayTags.Attribute_Vital_Health=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Vital.Health"),FString("HealthAttribute"));
 	GameplayTags.Attribute_Vital_MaxHealth=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Vital.MaxHealth"),FString("MaxHealthAttribute"));
 	GameplayTags.Attribute_Vital_Mana=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Vital.Mana"),FString("ManaAttribute"));
+	GameplayTags.Attribute_Vital_Mana= UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.Mana"));
 	GameplayTags.Attribute_Vital_MaxMana=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Vital.MaxMana"),FString("MaxManaAttribute"));
+	GameplayTags.Attribute_Vital_MaxMana= UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.MaxMana"));
+
+
+	/**
+	 *PrimaryAttributesTags
+	 */
+	GameplayTags.Attribute_Primary_Strength=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Strength"),FString("PrimaryAttributeStrength"));
+	GameplayTags.Attribute_Primary_Intelligence=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Intelligence"),FString("PrimaryAttributeIntelligence"));
+	GameplayTags.Attribute_Primary_Resilience=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Resilience"),FString("PrimaryAttributeResilience"));
+	GameplayTags.Attribute_Primary_Vigor=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Vigor"),FString("PrimaryAttributeVigor"));
 	
 	
 	/**
@@ -31,4 +42,5 @@ void FMyGameplayTags::InitializeGameplayTags()
 	GameplayTags.Message_HealthPotion=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Message.HealthPotion"),FString("Health Potion"));
 	GameplayTags.Message_ManaPotion=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Message.ManaPotion"),FString("Mana Potion"));
 	GameplayTags.Message_Fire=UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Message.Fire"),FString("Fire"));
+	UGameplayTagsManager::Get().DoneAddingNativeTags();
 }

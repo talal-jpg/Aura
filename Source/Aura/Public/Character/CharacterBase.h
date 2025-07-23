@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UGameplayEffect;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UCameraComponent;
@@ -36,5 +37,11 @@ public:
 
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	// InitializeDefaultAttrs
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	void InitializePrimaryAttributes();
 
 };

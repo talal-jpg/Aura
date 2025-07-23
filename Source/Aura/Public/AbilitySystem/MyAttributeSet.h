@@ -23,6 +23,7 @@ public:
 	UMyAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
+	// VitalAttributes
 	UPROPERTY(ReplicatedUsing= OnRep_Health)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Health)
@@ -39,6 +40,26 @@ public:
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxMana)
 
+	// PrimaryAttributes
+	UPROPERTY(ReplicatedUsing= OnRep_Strength)
+	FGameplayAttributeData Strength;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Strength)
+
+	UPROPERTY(ReplicatedUsing= OnRep_Intelligence)
+	FGameplayAttributeData Intelligence;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Intelligence)
+
+	UPROPERTY(ReplicatedUsing= OnRep_Resilience)
+	FGameplayAttributeData Resilience;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Resilience)
+
+	UPROPERTY(ReplicatedUsing= OnRep_Vigor)
+	FGameplayAttributeData Vigor;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Vigor)
+
+
+
+	// VitalAttributes
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_Health(const FGameplayAttributeData& OldValue) const;
 	
@@ -50,6 +71,21 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue) const;
+
+
+	
+	// PrimaryAttributes
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_Strength(const FGameplayAttributeData& OldValue) const;
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_Intelligence(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_Resilience(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_Vigor(const FGameplayAttributeData& OldValue) const;
 
 	TMap<FGameplayTag,FGameplayAttribute> AttributeGameplayTagMap;
 };

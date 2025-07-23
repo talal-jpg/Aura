@@ -59,5 +59,6 @@ class AURA_API UMyWidgetController : public UObject
 
 	protected:
 	virtual void BroadcastInitialValues();
+
 	virtual void BindCallbackToDependencies();
 };

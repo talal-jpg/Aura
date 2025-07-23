@@ -8,8 +8,11 @@
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 #include "AbilitySystem/MyAttributeSet.h"
 #include "AbilitySystem/MyGameplayTags.h"
+#include "Components/SplineComponent.h"
 #include "Interface/CursorHitInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Player/MyEnhancedInputComponent.h"
@@ -17,6 +20,7 @@
 
 AMyPlayerController::AMyPlayerController()
 {
+	Spline=CreateDefaultSubobject<USplineComponent>("Spline");
 	bShowMouseCursor = true;
 	DefaultMouseCursor= EMouseCursor::Default;
 	FInputModeGameAndUI InputMode;
@@ -41,6 +45,7 @@ void AMyPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CursorTrace();
+	AutoMove();
 }
 
 void AMyPlayerController::Move(const FInputActionValue& Value)
@@ -51,6 +56,26 @@ void AMyPlayerController::Move(const FInputActionValue& Value)
 	FVector Side= FRotationMatrix(Rot).GetUnitAxis(EAxis::Y);
 	GetPawn()->AddMovementInput(Forward,Val.X);
 	GetPawn()->AddMovementInput(Side,Val.Y);
+}
+
+void AMyPlayerController::AutoMove()
+{
+	if (!bIsAutoMoving) return;
+	FVector ClosestLocation=Spline->FindLocationClosestToWorldLocation(GetPawn()->GetActorLocation(),ESplineCoordinateSpace::World);
+	FVector DirectionVector= Spline->FindDirectionClosestToWorldLocation(ClosestLocation,ESplineCoordinateSpace::World);
+
+	int32 PntNum=Spline->GetNumberOfSplinePoints();
+	FVector LastPointLoc=Spline->GetLocationAtSplinePoint(PntNum,ESplineCoordinateSpace::World);
+	float Distance= (LastPointLoc-GetPawn()->GetActorLocation()).Length();
+	
+	if (Distance>AcceptableDistance)
+	{
+		GetPawn()->AddMovementInput(DirectionVector,1);
+	}
+	else
+	{
+		bIsAutoMoving=false;
+	}
 }
 
 void AMyPlayerController::CursorTrace()
@@ -77,15 +102,11 @@ void AMyPlayerController::CursorTrace()
 
 void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 {
-	AMyPlayerState* MyPlayerState=GetPlayerState<AMyPlayerState>();
-	const UMyAttributeSet* MyAttributeSet= Cast<UMyAttributeSet>(MyPlayerState->AttributeSet);
-	for (auto Pair:MyAttributeSet->AttributeGameplayTagMap)
-	{
-		FString String=Pair.Key.GetTagName().ToString();
-		UKismetSystemLibrary::PrintString(this,String);
-	}
 	
-	GEngine->AddOnScreenDebugMessage(5,10,FColor::Red,InputTag.ToString());
+//	UKismetSystemLibrary::PrintString(this,InputTag.ToString());
+//	UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB"));
+//	UKismetSystemLibrary::PrintString(this,InputTag.ToString());
+	
 	UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
 	for (auto Ability:ASC->GetActivatableAbilities())
 	{
@@ -97,9 +118,33 @@ void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 
 void AMyPlayerController::InputHeld(FGameplayTag InputTag)
 {
-	
+	if (InputTag== UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB")))
+	{
+		HeldTime+=GetWorld()->GetDeltaSeconds();
+		//UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("HeldTime: %f"),HeldTime));
+		
+		FHitResult HitResult;
+		GetHitResultUnderCursor(ECC_Visibility,false,HitResult);
+		CachedDestination=HitResult.ImpactPoint;
+		FVector Dir= (CachedDestination-GetPawn()->GetActorLocation()).GetSafeNormal();
+		GetPawn()->AddMovementInput(Dir,1);
+	}
 }
 
 void AMyPlayerController::InputReleased(FGameplayTag InputTag)
 {
+	if (HeldTime<ShortPressThreshold)
+	{
+		FVector Start=GetPawn()->GetActorLocation();
+		
+		
+		UNavigationPath* NavPath= UNavigationSystemV1::FindPathToLocationSynchronously(GetPawn(),Start,CachedDestination);
+		Spline->ClearSplinePoints();
+		for (auto Point:NavPath->PathPoints)
+		{
+			Spline->AddSplinePoint(Point,ESplineCoordinateSpace::World);
+		}
+		bIsAutoMoving=true;
+	}
+	HeldTime=0;
 }

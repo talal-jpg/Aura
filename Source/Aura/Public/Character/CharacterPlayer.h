@@ -6,6 +6,7 @@
 #include "Character/CharacterBase.h"
 #include "CharacterPlayer.generated.h"
 
+class UGameplayEffect;
 class UGameplayAbility;
 /**
  * 
@@ -32,6 +33,7 @@ class AURA_API ACharacterPlayer : public ACharacterBase
 
 	void InitAbilityActorInfoAndSetASCASMemberVars();
 
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
 

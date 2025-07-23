@@ -3,6 +3,7 @@
 
 #include "Character/CharacterBase.h"
 
+#include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -17,6 +18,14 @@ ACharacterBase::ACharacterBase()
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ACharacterBase::InitializePrimaryAttributes()
+{
+	FGameplayEffectContextHandle EffectContextHandle;
+	EffectContextHandle.AddSourceObject(this);
+	FGameplayEffectSpecHandle EffectSpecHandle=GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes, 1,EffectContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
 

@@ -51,6 +51,8 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 	AbilitySystemComponent= PS->GetAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState<AMyPlayerState>(),this);
 	AttributeSet= PS->AttributeSet;
+
+	InitializePrimaryAttributes();
 	APlayerController* PC= GetController<AMyPlayerController>();
 	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,AbilitySystemComponent,AttributeSet);
 	if (PC)// have to check PC with an if here because only on server all the PCs are present and on all the clients every client only has one 
@@ -62,6 +64,7 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 		}
 	}
 }
+
 
 void ACharacterPlayer::GiveStartUpAbilities()
 {

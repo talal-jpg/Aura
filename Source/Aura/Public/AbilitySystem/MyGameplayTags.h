@@ -16,10 +16,17 @@ struct FMyGameplayTags
 
 	static void InitializeGameplayTags();
 
+	// VitalAttributes
 	FGameplayTag Attribute_Vital_Health;
 	FGameplayTag Attribute_Vital_Mana;
 	FGameplayTag Attribute_Vital_MaxHealth;
 	FGameplayTag Attribute_Vital_MaxMana;
+
+	// PrimaryAttributes
+	FGameplayTag Attribute_Primary_Strength;
+	FGameplayTag Attribute_Primary_Intelligence;
+	FGameplayTag Attribute_Primary_Resilience;
+	FGameplayTag Attribute_Primary_Vigor;
 	
 	FGameplayTag Input_LMB;
 

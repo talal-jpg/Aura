@@ -10,7 +10,6 @@
 #include "UI/WidgetController/MyWidgetController.h"
 
 class AMyPlayerState;
-
 UAttributeMenuWidgetController* UMyBlueprintFunctionLibrary::GetAttributeMenuWidgetController(const UObject* WorldContextObject)
 {
 	APlayerController* PC=UGameplayStatics::GetPlayerController(WorldContextObject,0);

@@ -32,7 +32,7 @@ UAttributeMenuWidgetController* AMyHUD::GetAttributeMenuWidgetController(const F
 void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
 {
 	FWidgetControllerParams WCParams= FWidgetControllerParams(Params);
-	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));ImageParallelForComputeNumJobsForPixels()
+	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));
 	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
 	OverlayUserWidget->AddToViewport();
 	GetOverlayWidgetController(WCParams)->BroadcastInitialValues();

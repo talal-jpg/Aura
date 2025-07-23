@@ -15,3 +15,4 @@ void UMyAssetManager::StartInitialLoading()
 	Super::StartInitialLoading();
 	FMyGameplayTags::Get().InitializeGameplayTags();
 }
+

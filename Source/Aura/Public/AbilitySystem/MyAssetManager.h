@@ -18,3 +18,4 @@ class AURA_API UMyAssetManager : public UAssetManager
 	
 	virtual void StartInitialLoading() override;
 };
+

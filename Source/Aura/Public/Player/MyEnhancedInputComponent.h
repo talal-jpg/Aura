@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "DA_InputConfig.h"
 #include "EnhancedInputComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "MyEnhancedInputComponent.generated.h"
 
 /**
@@ -38,9 +39,8 @@ void UMyEnhancedInputComponent::BindInputAbilityAction(UserClass Object,const UD
 				}
 				if (ReleasedFunc)
 				{
-					BindAction(InputConfig.InputAction,ETriggerEvent::Completed,Object,HeldFunc,InputConfig.InputTag);
+					BindAction(InputConfig.InputAction,ETriggerEvent::Completed,Object,ReleasedFunc,InputConfig.InputTag);
 				}
-				
 			}
 		}
 }

@@ -36,5 +36,7 @@ class AURA_API UAttributeInfoDataAsset : public UDataAsset
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FAttributeInfoStruct> AttributeInfo;
+
+	FAttributeInfoStruct GetAttributeInfoByTag(FGameplayTag Tag);
 	
 };
