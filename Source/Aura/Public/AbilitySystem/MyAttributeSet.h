@@ -28,17 +28,9 @@ public:
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Health)
 	
-	UPROPERTY(ReplicatedUsing= OnRep_MaxHealth)
-	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxHealth)
-	
 	UPROPERTY(ReplicatedUsing= OnRep_Mana)
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Mana)
-	
-	UPROPERTY(ReplicatedUsing= OnRep_MaxMana)
-	FGameplayAttributeData MaxMana;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxMana)
 
 	// PrimaryAttributes
 	UPROPERTY(ReplicatedUsing= OnRep_Strength)
@@ -57,22 +49,53 @@ public:
 	FGameplayAttributeData Vigor;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Vigor)
 
+	// SecondaryAttributes
+	UPROPERTY(ReplicatedUsing= OnRep_Armor)
+	FGameplayAttributeData Armor;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,Armor)
 
+	UPROPERTY(ReplicatedUsing= OnRep_ArmorPenetration)
+	FGameplayAttributeData ArmorPenetration;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,ArmorPenetration)
 
+	UPROPERTY(ReplicatedUsing= OnRep_BlockChance)
+	FGameplayAttributeData BlockChance;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,BlockChance)
+
+	UPROPERTY(ReplicatedUsing= OnRep_CriticalHitChance)
+	FGameplayAttributeData CriticalHitChance;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,CriticalHitChance)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_CriticalHitDamage)
+	FGameplayAttributeData CriticalHitDamage;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,CriticalHitDamage)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_CriticalHitResistance)
+	FGameplayAttributeData CriticalHitResistance;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,CriticalHitResistance)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_HealthRegeneration)
+	FGameplayAttributeData HealthRegeneration;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,HealthRegeneration)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_ManaRegeneration)
+	FGameplayAttributeData ManaRegeneration;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,ManaRegeneration)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_MaxHealth)
+	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxHealth)
+	
+	UPROPERTY(ReplicatedUsing= OnRep_MaxMana)
+	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,MaxMana)
+	
 	// VitalAttributes
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_Health(const FGameplayAttributeData& OldValue) const;
 	
 	UFUNCTION(BlueprintCallable, Category="Attributes")
-	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue) const;
-	
-	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_Mana(const FGameplayAttributeData& OldValue) const;
-	
-	UFUNCTION(BlueprintCallable, Category="Attributes")
-	void OnRep_MaxMana(const FGameplayAttributeData& OldValue) const;
-
-
 	
 	// PrimaryAttributes
 	UFUNCTION(BlueprintCallable, Category="Attributes")
@@ -87,5 +110,36 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	void OnRep_Vigor(const FGameplayAttributeData& OldValue) const;
 
+	// SecondaryAttributes
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_Armor(const FGameplayAttributeData& OldValue) const;
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_ArmorPenetration(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_BlockChance(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_CriticalHitChance(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_CriticalHitDamage(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_CriticalHitResistance(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	void OnRep_MaxMana(const FGameplayAttributeData& OldValue) const;
+	
 	TMap<FGameplayTag,FGameplayAttribute> AttributeGameplayTagMap;
 };

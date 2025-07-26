@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/CharacterBase.h"
+#include "Interface/CombatInterface.h"
 #include "CharacterPlayer.generated.h"
 
 class UGameplayEffect;
@@ -20,6 +21,10 @@ class AURA_API ACharacterPlayer : public ACharacterBase
 	ACharacterPlayer();
 
 	virtual void BeginPlay() override;
+
+	virtual int GetPlayerLevel() override;
+
+	int PlayerLevel=1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> CameraArm;

@@ -25,8 +25,12 @@ void ACharacterPlayer::BeginPlay()
 	Super::BeginPlay();
 	if (!HasAuthority())
 	{
-		// InitOverlay();
 	}
+}
+
+int ACharacterPlayer::GetPlayerLevel()
+{
+	return PlayerLevel;
 }
 
 void ACharacterPlayer::PossessedBy(AController* NewController)
@@ -34,7 +38,6 @@ void ACharacterPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfoAndSetASCASMemberVars();
 	// GiveStartUpAbilities();
-	// InitOverlay();
 }
 
 void ACharacterPlayer::OnRep_PlayerState()
@@ -52,7 +55,12 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 	AbilitySystemComponent->InitAbilityActorInfo(GetPlayerState<AMyPlayerState>(),this);
 	AttributeSet= PS->AttributeSet;
 
+	// initAttributes
+	
 	InitializePrimaryAttributes();
+	InitializeSecondaryAttributes();
+	InitializeVitalAttributes();
+	
 	APlayerController* PC= GetController<AMyPlayerController>();
 	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,AbilitySystemComponent,AttributeSet);
 	if (PC)// have to check PC with an if here because only on server all the PCs are present and on all the clients every client only has one 

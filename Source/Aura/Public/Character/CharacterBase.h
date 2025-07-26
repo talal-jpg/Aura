@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Interface/CombatInterface.h"
 #include "CharacterBase.generated.h"
 
 class UGameplayEffect;
@@ -14,7 +15,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class AURA_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
+class AURA_API ACharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -42,6 +43,19 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
 	void InitializePrimaryAttributes();
 
+	void InitializeSecondaryAttributes();
+
+	void InitializeVitalAttributes();
+
+	void ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass);
+
+	virtual int GetPlayerLevel() override;
 };

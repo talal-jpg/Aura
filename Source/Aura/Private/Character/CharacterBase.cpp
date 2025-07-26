@@ -22,10 +22,31 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 
 void ACharacterBase::InitializePrimaryAttributes()
 {
-	FGameplayEffectContextHandle EffectContextHandle;
+	ApplyEffect(DefaultPrimaryAttributes);
+}
+
+void ACharacterBase::InitializeSecondaryAttributes()
+{
+	ApplyEffect(DefaultSecondaryAttributes);
+}
+
+void ACharacterBase::InitializeVitalAttributes()
+{
+	ApplyEffect(DefaultVitalAttributes);
+}
+
+void ACharacterBase::ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass)
+{
+	FGameplayEffectContextHandle EffectContextHandle=GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
-	FGameplayEffectSpecHandle EffectSpecHandle=GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes, 1,EffectContextHandle);
+	FGameplayEffectSpecHandle EffectSpecHandle=GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass, 1,EffectContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+}
+
+int ACharacterBase::GetPlayerLevel()
+{
+	int PlayerLevel=0;
+	return PlayerLevel;
 }
 
 
