@@ -18,5 +18,6 @@ class AURA_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 	UMyAbilitySystemComponent();
 
 	FOnGameplayEffectApplliedBroadcastAssetTagsDelegateSignature OnGameplayEffectAppliedBroadcastAssetTagsDelegate;
+
 	
 };

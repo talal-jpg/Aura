@@ -2,10 +2,10 @@
 
 
 #include "AbilitySystem/MyAttributeSet.h"
-
+#include "GameplayEffectExtension.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayTagsManager.h"
-#include "AbilitySystem/MyGameplayTags.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 UMyAttributeSet::UMyAttributeSet()
@@ -60,6 +60,33 @@ void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet,ManaRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet,MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet,MaxMana, COND_None, REPNOTIFY_Always);
+	
+}
+
+void UMyAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	if (Attribute== GetHealthAttribute())
+	{
+		NewValue= FMath::Clamp(NewValue,0,GetMaxHealth());
+	}
+	if (Attribute== GetManaAttribute())
+	{
+		NewValue= FMath::Clamp(NewValue,0,GetMaxMana());
+	}
+}
+
+void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	if(Data.EvaluatedData.Attribute==GetHealthAttribute())
+	{
+		float Mag=  Data.EvaluatedData.Magnitude;
+		SetHealth(FMath::Clamp(GetHealth(),0,GetMaxHealth()));
+		UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Health: %f\n"),Mag));
+
+	}
+	
 	
 }
 
