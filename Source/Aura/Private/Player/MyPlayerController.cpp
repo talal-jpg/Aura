@@ -107,7 +107,7 @@ void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 //	UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB"));
 //	UKismetSystemLibrary::PrintString(this,InputTag.ToString());
 	
-	UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
+UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
 	for (auto Ability:ASC->GetActivatableAbilities())
 	{
 		FGameplayAbilitySpecHandle AbilitySpecHandle;
@@ -135,14 +135,16 @@ void AMyPlayerController::InputReleased(FGameplayTag InputTag)
 {
 	if (HeldTime<ShortPressThreshold)
 	{
-		FVector Start=GetPawn()->GetActorLocation();
-		
-		
-		UNavigationPath* NavPath= UNavigationSystemV1::FindPathToLocationSynchronously(GetPawn(),Start,CachedDestination);
-		Spline->ClearSplinePoints();
-		for (auto Point:NavPath->PathPoints)
+		if (APawn* ControlledPawn=GetPawn())
 		{
-			Spline->AddSplinePoint(Point,ESplineCoordinateSpace::World);
+			FVector Start=ControlledPawn->GetActorLocation();
+			
+			UNavigationPath* NavPath= UNavigationSystemV1::FindPathToLocationSynchronously(GetPawn(),Start,CachedDestination);
+			Spline->ClearSplinePoints();
+			for (auto Point:NavPath->PathPoints)
+			{
+				Spline->AddSplinePoint(Point,ESplineCoordinateSpace::World);
+			}
 		}
 		bIsAutoMoving=true;
 	}

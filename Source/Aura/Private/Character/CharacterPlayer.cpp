@@ -37,15 +37,14 @@ void ACharacterPlayer::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfoAndSetASCASMemberVars();
-	// GiveStartUpAbilities();
+	GiveStartUpAbilities();
 }
 
 void ACharacterPlayer::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitAbilityActorInfoAndSetASCASMemberVars();
-	// GiveStartUpAbilities();
-	
+	GiveStartUpAbilities();
 }
 
 void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()

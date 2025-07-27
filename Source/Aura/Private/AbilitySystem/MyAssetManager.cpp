@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/MyAssetManager.h"
 
+#include "AbilitySystemGlobals.h"
 #include "AbilitySystem/MyGameplayTags.h"
 
 UMyAssetManager& UMyAssetManager::Get()
@@ -14,5 +15,6 @@ void UMyAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
 	FMyGameplayTags::Get().InitializeGameplayTags();
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }
 
