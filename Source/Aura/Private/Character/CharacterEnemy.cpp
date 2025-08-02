@@ -14,18 +14,19 @@ ACharacterEnemy::ACharacterEnemy()
 	AttributeSet= CreateDefaultSubobject<UMyAttributeSet>("AttributeSet");
 	WidgetComponent=CreateDefaultSubobject<UWidgetComponent>("WidgetComponent");
 	WidgetComponent->SetupAttachment(RootComponent);
-
-	HealthBar= Cast<UMyUserWidget>(WidgetComponent->GetWidget());
-	
 }
 
 void ACharacterEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
-	InitializePrimaryAttributes();
-	InitializeSecondaryAttributes();
-	InitializeVitalAttributes();
+	
+
+	HealthBar= Cast<UMyUserWidget>(WidgetComponent->GetWidget());
+	if (HealthBar)
+	{
+		HealthBar->SetWidgetController(this);
+	}
 	UMyAttributeSet* MyAttributeSet= Cast<UMyAttributeSet>(AttributeSet);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(MyAttributeSet->GetHealthAttribute()).AddLambda(
 		[this](const FOnAttributeChangeData& Data)
@@ -42,6 +43,10 @@ void ACharacterEnemy::BeginPlay()
 		}
 	);
 	
+	InitializePrimaryAttributes();
+	InitializeSecondaryAttributes();
+	InitializeVitalAttributes();
+	
 	
 }
 
@@ -54,9 +59,11 @@ void ACharacterEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	float H=Cast<UMyAttributeSet>(AttributeSet)->GetHealth();
+	float MaxH=Cast<UMyAttributeSet>(AttributeSet)->GetMaxHealth();
 	
 	// UKismetSystemLibrary::PrintString(this,AttributeSet->GetName());
-	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Health : %f"),H));
+	// UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Health : %f"),H));
+	// UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("MaxHealth : %f"),MaxH));
 }
 
 void ACharacterEnemy::Highlight()
