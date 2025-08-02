@@ -15,6 +15,11 @@ ACharacterBase::ACharacterBase()
 	bReplicates = true;
 }
 
+FVector ACharacterBase::GetCombatSocketLocation()
+{
+	return WeaponMesh->GetSocketLocation(WeaponTipSocketName);
+}
+
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;

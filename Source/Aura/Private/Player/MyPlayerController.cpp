@@ -46,6 +46,7 @@ void AMyPlayerController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	CursorTrace();
 	AutoMove();
+	bIsTargeting=ThisActor ? true : false;
 }
 
 void AMyPlayerController::Move(const FInputActionValue& Value)
@@ -64,7 +65,7 @@ void AMyPlayerController::AutoMove()
 	FVector ClosestLocation=Spline->FindLocationClosestToWorldLocation(GetPawn()->GetActorLocation(),ESplineCoordinateSpace::World);
 	FVector DirectionVector= Spline->FindDirectionClosestToWorldLocation(ClosestLocation,ESplineCoordinateSpace::World);
 
-	int32 PntNum=Spline->GetNumberOfSplinePoints();
+	int32 PntNum=Spline->GetNumberOfSplinePoints()-1;
 	FVector LastPointLoc=Spline->GetLocationAtSplinePoint(PntNum,ESplineCoordinateSpace::World);
 	float Distance= (LastPointLoc-GetPawn()->GetActorLocation()).Length();
 	
@@ -106,19 +107,23 @@ void AMyPlayerController::InputPressed(FGameplayTag InputTag)
 //	UKismetSystemLibrary::PrintString(this,InputTag.ToString());
 //	UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB"));
 //	UKismetSystemLibrary::PrintString(this,InputTag.ToString());
-	
-UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
-	for (auto Ability:ASC->GetActivatableAbilities())
+
+	if (InputTag== UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB")) && bIsTargeting)
 	{
-		FGameplayAbilitySpecHandle AbilitySpecHandle;
-		ASC->TryActivateAbility(Ability.Handle);
-		Ability.InputPressed=true;
+		UAbilitySystemComponent* ASC=GetPlayerState<AMyPlayerState>()->AbilitySystemComponent;
+		for (auto Ability:ASC->GetActivatableAbilities())
+		{
+			FGameplayAbilitySpecHandle AbilitySpecHandle;
+			ASC->TryActivateAbility(Ability.Handle);
+			Ability.InputPressed=true;
+		}
 	}
 }
 
 void AMyPlayerController::InputHeld(FGameplayTag InputTag)
 {
-	if (InputTag== UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB")))
+	
+	if (InputTag== UGameplayTagsManager::Get().RequestGameplayTag(FName("Input.LMB")) && !bIsTargeting)
 	{
 		HeldTime+=GetWorld()->GetDeltaSeconds();
 		//UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("HeldTime: %f"),HeldTime));
@@ -133,6 +138,7 @@ void AMyPlayerController::InputHeld(FGameplayTag InputTag)
 
 void AMyPlayerController::InputReleased(FGameplayTag InputTag)
 {
+	if (bIsTargeting)return;
 	if (HeldTime<ShortPressThreshold)
 	{
 		if (APawn* ControlledPawn=GetPawn())
@@ -144,6 +150,7 @@ void AMyPlayerController::InputReleased(FGameplayTag InputTag)
 			for (auto Point:NavPath->PathPoints)
 			{
 				Spline->AddSplinePoint(Point,ESplineCoordinateSpace::World);
+				// DrawDebugSphere(GetWorld(),Point,10,10,FColor::Green,true,10);
 			}
 		}
 		bIsAutoMoving=true;

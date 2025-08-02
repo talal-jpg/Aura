@@ -71,4 +71,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveGameplayEffectHandles;
 
+	UPROPERTY(EditAnywhere)
+	int32 ActorLevel=1;
+	
+
 };

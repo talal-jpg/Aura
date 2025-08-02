@@ -50,11 +50,15 @@ class AURA_API AMyPlayerController : public APlayerController
 	ICursorHitInterface* ThisActor=nullptr;
 	ICursorHitInterface* LastActor=nullptr;
 
+	bool bIsTargeting=false;
+
 	float HeldTime=0;
 	float ShortPressThreshold=.5f;
 	FVector CachedDestination=FVector::ZeroVector;
-	float AcceptableDistance=90.f;
+	float AcceptableDistance=120.f;
 	bool bIsAutoMoving=false;
+
+	
 	
 	UPROPERTY()
 	USplineComponent* Spline;

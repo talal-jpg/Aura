@@ -19,5 +19,8 @@ class AURA_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 
 	FOnGameplayEffectApplliedBroadcastAssetTagsDelegateSignature OnGameplayEffectAppliedBroadcastAssetTagsDelegate;
 
+	UFUNCTION(Client,Reliable)
+	void ClientOnEffectAppliedDelegateCallback(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle);
+
 	
 };

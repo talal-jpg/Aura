@@ -10,12 +10,12 @@ UMyAbilitySystemComponent::UMyAbilitySystemComponent()
 	/**
 	 *PopUpWidgetDoesntHaveAControllerThatIsWhyWeBroadcastDelegateHere
 	 */
-	OnGameplayEffectAppliedDelegateToSelf.AddLambda(
-		[this](UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
-		{
-			FGameplayTagContainer AssetTagsOnGEContainer;
-			GESpec.GetAllAssetTags(AssetTagsOnGEContainer);
-			OnGameplayEffectAppliedBroadcastAssetTagsDelegate.Broadcast(AssetTagsOnGEContainer);
-		}
-	);
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UMyAbilitySystemComponent::ClientOnEffectAppliedDelegateCallback);
+}
+
+void UMyAbilitySystemComponent::ClientOnEffectAppliedDelegateCallback_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
+{
+	FGameplayTagContainer AssetTagsOnGEContainer;
+	GESpec.GetAllAssetTags(AssetTagsOnGEContainer);
+	OnGameplayEffectAppliedBroadcastAssetTagsDelegate.Broadcast(AssetTagsOnGEContainer);
 }

@@ -83,8 +83,7 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	{
 		float Mag=  Data.EvaluatedData.Magnitude;
 		SetHealth(FMath::Clamp(GetHealth(),0,GetMaxHealth()));
-		UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Health: %f\n"),Mag));
-
+		// UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Health: %f\n"),Mag));
 	}
 	
 	

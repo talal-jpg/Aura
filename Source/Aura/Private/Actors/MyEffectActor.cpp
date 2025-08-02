@@ -73,7 +73,7 @@ void AMyEffectActor::OnEndOverlap(AActor* OtherActor)
 		if (EffectApplicationPolicy==EEffectApplicationPolicy::ApplyOnEndOverlap)
 		{
 			FGameplayEffectContextHandle ContextHandle;
-			FGameplayEffectSpecHandle GESpecHandle = OtherActorsAsc->MakeOutgoingSpec(GameplayEffectClass, 1, ContextHandle);
+			FGameplayEffectSpecHandle GESpecHandle = OtherActorsAsc->MakeOutgoingSpec(GameplayEffectClass, ActorLevel, ContextHandle);
 			FGameplayEffectSpec* GESpec = GESpecHandle.Data.Get();
 			
 			FActiveGameplayEffectHandle ActiveGameplayEffectHandle=OtherActorsAsc->ApplyGameplayEffectSpecToSelf(*GESpec);

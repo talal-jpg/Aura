@@ -15,6 +15,6 @@ void UMyAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
 	FMyGameplayTags::Get().InitializeGameplayTags();
-	UAbilitySystemGlobals::Get().InitGlobalData();
+	// UAbilitySystemGlobals::Get().InitGlobalData();
 }
 

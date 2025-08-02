@@ -29,6 +29,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName WeaponTipSocketName;
+
+	virtual FVector GetCombatSocketLocation()override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAbilitySystemComponent* AbilitySystemComponent;
