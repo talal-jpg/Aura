@@ -55,10 +55,8 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 	AttributeSet= PS->AttributeSet;
 
 	// initAttributes
-	
-	InitializePrimaryAttributes();
-	InitializeSecondaryAttributes();
-	InitializeVitalAttributes();
+
+	InitializeDefaultAttributes();
 	
 	APlayerController* PC= GetController<AMyPlayerController>();
 	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,AbilitySystemComponent,AttributeSet);

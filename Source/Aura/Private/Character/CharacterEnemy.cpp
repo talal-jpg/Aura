@@ -2,8 +2,11 @@
 
 
 #include "Character/CharacterEnemy.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/MyAbilitySystemComponent.h"
 #include "AbilitySystem/MyAttributeSet.h"
+#include "AbilitySystem/MyBlueprintFunctionLibrary.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/MyUserWidget.h"
@@ -43,16 +46,18 @@ void ACharacterEnemy::BeginPlay()
 		}
 	);
 	
-	InitializePrimaryAttributes();
-	InitializeSecondaryAttributes();
-	InitializeVitalAttributes();
-	
+	InitializeDefaultAttributes();
 	
 }
 
 int ACharacterEnemy::GetPlayerLevel()
 {
 	return PlayerLevel;
+}
+
+void ACharacterEnemy::InitializeDefaultAttributes()
+{
+	UMyBlueprintFunctionLibrary::InitializeDefaultCharacterAttributes(this,CharacterClass,Level,AbilitySystemComponent);
 }
 
 void ACharacterEnemy::Tick(float DeltaTime)

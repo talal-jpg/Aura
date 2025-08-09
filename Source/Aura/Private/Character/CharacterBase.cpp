@@ -40,6 +40,13 @@ void ACharacterBase::InitializeVitalAttributes()
 	ApplyEffect(DefaultVitalAttributes);
 }
 
+void ACharacterBase::InitializeDefaultAttributes()
+{
+	InitializePrimaryAttributes();
+	InitializeSecondaryAttributes();
+	InitializeVitalAttributes();
+}
+
 void ACharacterBase::ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass)
 {
 	FGameplayEffectContextHandle EffectContextHandle=GetAbilitySystemComponent()->MakeEffectContext();

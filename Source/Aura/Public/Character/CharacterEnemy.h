@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Character/CharacterBase.h"
 #include "Interface/CursorHitInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "CharacterEnemy.generated.h"
 
+enum class ECharacterClass : uint8;
 class UMyUserWidget;
 class UWidgetComponent;
 /**
@@ -41,11 +43,18 @@ class AURA_API ACharacterEnemy : public ACharacterBase , public ICursorHitInterf
 	UPROPERTY(BlueprintReadWrite)
 	UMyUserWidget* HealthBar;
 
-
 	UPROPERTY(EditAnywhere )
 	int PlayerLevel=1;
 	
 	virtual int GetPlayerLevel() override;
+
+	virtual void InitializeDefaultAttributes() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ECharacterClass CharacterClass=ECharacterClass::Warrior;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Level=1;
 };
 
 

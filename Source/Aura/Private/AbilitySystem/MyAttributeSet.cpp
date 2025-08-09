@@ -19,24 +19,24 @@ UMyAttributeSet::UMyAttributeSet()
 //	AttributeGameplayTagMap.Add(FMyGameplayTags::Get().Attribute_Vital_Mana,GetManaAttribute());
 //	AttributeGameplayTagMap.Add(FMyGameplayTags::Get().Attribute_Vital_MaxMana,GetMaxManaAttribute());
 	
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.Health")),GetHealthAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.Mana")),GetManaAttribute());
-	
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Strength")),GetStrengthAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Intelligence")),GetIntelligenceAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Resilience")),GetResilienceAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Vigor")),GetVigorAttribute());
-	
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.Armor")),GetArmorAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.ArmorPenetration")),GetArmorPenetrationAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.BlockChance")),GetBlockChanceAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.CriticalHitChance")),GetCriticalHitChanceAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.CriticalHitDamage")),GetCriticalHitDamageAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.CriticalHitResistance")),GetCriticalHitResistanceAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.HealthRegeneration")),GetHealthRegenerationAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.ManaRegeneration")),GetManaRegenerationAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.MaxHealth")),GetMaxHealthAttribute());
-	AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.MaxMana")),GetMaxManaAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.Health")),GetHealthAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.Mana")),GetManaAttribute());
+	//
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Strength")),GetStrengthAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Intelligence")),GetIntelligenceAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Resilience")),GetResilienceAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Primary.Vigor")),GetVigorAttribute());
+	//
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.Armor")),GetArmorAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.ArmorPenetration")),GetArmorPenetrationAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.BlockChance")),GetBlockChanceAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.CriticalHitChance")),GetCriticalHitChanceAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.CriticalHitDamage")),GetCriticalHitDamageAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.CriticalHitResistance")),GetCriticalHitResistanceAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.HealthRegeneration")),GetHealthRegenerationAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Secondary.ManaRegeneration")),GetManaRegenerationAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.MaxHealth")),GetMaxHealthAttribute());
+	// AttributeGameplayTagMap.Add(UGameplayTagsManager::Get().RequestGameplayTag(FName("Attributes.Vital.MaxMana")),GetMaxManaAttribute());
 }
 
 void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

@@ -59,6 +59,8 @@ public:
 
 	void InitializeVitalAttributes();
 
+	virtual void InitializeDefaultAttributes();
+
 	void ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass);
 
 	virtual int GetPlayerLevel() override;
