@@ -27,6 +27,11 @@ public:
 
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	// MetaAttributes
+	UPROPERTY(BlueprintReadOnly,Category="Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet,IncomingDamage)
+
 	// VitalAttributes
 	UPROPERTY(ReplicatedUsing= OnRep_Health)
 	FGameplayAttributeData Health;

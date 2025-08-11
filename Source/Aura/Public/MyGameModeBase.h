@@ -16,6 +16,10 @@ class AURA_API AMyGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 	public:
+	// UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
+	// TObjectPtr<UCharacterClassInfo> DA_CharacterClassInfo;
+
+
 	UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
-	TObjectPtr<UCharacterClassInfo> DA_CharacterClassInfo;
+	UCharacterClassInfo* DA_CharacterClassInfo;
 };

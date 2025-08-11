@@ -81,9 +81,26 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	Super::PostGameplayEffectExecute(Data);
 	if(Data.EvaluatedData.Attribute==GetHealthAttribute())
 	{
-		float Mag=  Data.EvaluatedData.Magnitude;
 		SetHealth(FMath::Clamp(GetHealth(),0,GetMaxHealth()));
 		// UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Health: %f\n"),Mag));
+	}
+	if (Data.EvaluatedData.Attribute==GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(),0,GetMaxMana()));
+	}
+	if (Data.EvaluatedData.Attribute==GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage=GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (LocalIncomingDamage>0.f)
+		{
+			const float NewHealth= GetHealth()-LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth,0,GetMaxHealth()));
+
+			const bool bFatal = NewHealth<=0;
+		}
+		
+		
 	}
 	
 	

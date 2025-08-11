@@ -55,4 +55,7 @@ public:
 
 	
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	
+	FGameplayEffectSpecHandle HitReactEffectSpecHandle;
 };

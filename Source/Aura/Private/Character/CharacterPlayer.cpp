@@ -71,12 +71,3 @@ void ACharacterPlayer::InitAbilityActorInfoAndSetASCASMemberVars()
 }
 
 
-void ACharacterPlayer::GiveStartUpAbilities()
-{
-	for (auto Ability : StartUpAbilities)
-	{
-		FGameplayAbilitySpec AbilitySpec=AbilitySystemComponent->BuildAbilitySpecFromClass(Ability);
-		FGameplayAbilitySpecHandle AbilitySpecHandle=AbilitySystemComponent->GiveAbility(AbilitySpec);
-	}
-}
-

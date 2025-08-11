@@ -8,6 +8,8 @@
 #include "Interface/CombatInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayTagsManager.h"
+#include "AbilitySystem/MyGameplayTags.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UGA_MyProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -33,8 +35,14 @@ void UGA_MyProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 	
 	AMyProjectile* MyProjectile=GetWorld()->SpawnActorDeferred<AMyProjectile>(ProjectileClass,SpawnTransform,GetOwningActorFromActorInfo(),Cast<APawn>(GetOwningActorFromActorInfo()),ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	UAbilitySystemComponent* SourceAsc=UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-	FGameplayEffectSpecHandle SpecHandle= SourceAsc->MakeOutgoingSpec(DamageEffectClass,GetAbilityLevel(),SourceAsc->MakeEffectContext());
-	MyProjectile->DamageEffectSpecHandle=SpecHandle;
+	FGameplayEffectSpecHandle DamageEffectSpecHandle= SourceAsc->MakeOutgoingSpec(DamageEffectClass,GetAbilityLevel(),SourceAsc->MakeEffectContext());
+	FGameplayEffectSpecHandle HitReactEffectSpecHandle= SourceAsc->MakeOutgoingSpec(HitReactEffectClass,GetAbilityLevel(),SourceAsc->MakeEffectContext());
+	
+	float Damage= ProjectileDamage.GetValueAtLevel(GetAbilityLevel());
+	FGameplayTag DamageTag=UGameplayTagsManager::Get().RequestGameplayTag("Damage");
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageEffectSpecHandle,DamageTag,Damage);
+	MyProjectile->DamageEffectSpecHandle=DamageEffectSpecHandle;
+	MyProjectile->HitReactEffectSpecHandle=HitReactEffectSpecHandle;
 	MyProjectile->FinishSpawning(SpawnTransform);
 	
 }

@@ -55,6 +55,18 @@ class AURA_API ACharacterEnemy : public ACharacterBase , public ICursorHitInterf
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Level=1;
+
+	UFUNCTION()
+	void HitReactGameplayTagChangedDelegateCallback(const FGameplayTag CallbackTag, int32 NewCount);
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bHitReacting;
+
+	UPROPERTY(BlueprintReadOnly)
+	float BaseWalkSpeed=250;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayAbility> HitReactAbilityClass;
 };
 
 

@@ -39,8 +39,4 @@ class AURA_API ACharacterPlayer : public ACharacterBase
 	void InitAbilityActorInfoAndSetASCASMemberVars();
 
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
-
-	void GiveStartUpAbilities();
 };

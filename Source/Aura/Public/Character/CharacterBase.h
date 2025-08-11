@@ -8,6 +8,7 @@
 #include "Interface/CombatInterface.h"
 #include "CharacterBase.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -64,4 +65,9 @@ public:
 	void ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass);
 
 	virtual int GetPlayerLevel() override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
+
+	void GiveStartUpAbilities();
 };

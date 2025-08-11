@@ -39,7 +39,8 @@ struct FMyGameplayTags
 	FGameplayTag Attribute_Secondary_ManaRegeneration;
 
 
-
+	FGameplayTag Damage;
+	FGameplayTag Effects_HitReact;
 	
 	FGameplayTag Input_LMB;
 

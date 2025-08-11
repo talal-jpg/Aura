@@ -54,6 +54,7 @@ void AMyProjectile::OnSphereOverlapCallBack(UPrimitiveComponent* OverlappedCompo
 		if (UAbilitySystemComponent* TargetAsc=UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
 			TargetAsc->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			TargetAsc->ApplyGameplayEffectSpecToSelf(*HitReactEffectSpecHandle.Data.Get());
 		}
 		Destroy();
 	}

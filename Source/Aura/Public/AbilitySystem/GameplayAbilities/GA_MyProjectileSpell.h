@@ -24,4 +24,11 @@ class AURA_API UGA_MyProjectileSpell : public UMyGameplayAbility
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> HitReactEffectClass;
+	
+
+	UPROPERTY(EditAnywhere)
+	FScalableFloat ProjectileDamage;
 };
