@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyUserWidget.h"
 #include "GameFramework/HUD.h"
 #include "MyHUD.generated.h"
 
 class UAttributeMenuWidgetController;
 class UMyUserWidget;
-struct FWidgetControllerParams;
 class UOverlayWidgetController;
 /**
  * 
@@ -18,30 +18,26 @@ class AURA_API AMyHUD : public AHUD
 {
 	GENERATED_BODY()
 
-	public:
-	void InitOverlay(const FWidgetControllerParams& Params );
+	public: 
+	void InitOverlay();
 
-	virtual void BeginPlay() override;
+	UAttributeMenuWidgetController* GetAttributeMenuWidgetController() const;
 
+	UPROPERTY()
+	mutable UAttributeMenuWidgetController* AttributeMenuWidgetController;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UMyWidgetController> AttributeMenuWidgetControllerClass;
+	
 	UPROPERTY()
 	UOverlayWidgetController* OverlayWidgetController;
 
 	UPROPERTY()
-	UAttributeMenuWidgetController* AttributeMenuWidgetController;
-
-	UPROPERTY()
 	UMyUserWidget* OverlayUserWidget;
 
-	UPROPERTY(EditAnywhere, Category="UI")
-	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
-
-	UPROPERTY(EditAnywhere,Category="UI")
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<UMyUserWidget> OverlayUserWidgetClass;
-
-	UPROPERTY(EditAnywhere, Category="UI")
-	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
 	
-	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
-
-	UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams);
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UMyWidgetController> OverlayWidgetControllerClass;
 };

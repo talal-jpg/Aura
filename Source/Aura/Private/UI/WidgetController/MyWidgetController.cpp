@@ -3,20 +3,18 @@
 
 #include "UI/WidgetController/MyWidgetController.h"
 
-void UMyWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
+void UMyWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& Params)
 {
-	AbilitySystemComponent=WCParams.AbilitySystemComponent;
-	AttributeSet=WCParams.AttributeSet;
-	PlayerController=WCParams.PlayerController;
-	PlayerState=WCParams.PlayerState;
-	WidgetControllerParamsSet();
+	PlayerController= Params.PlayerController;
+	PlayerState= Params.PlayerState;
+	AbilitySystemComponent= Params.AbilitySystemComponent;
+	AttributeSet= Params.AttributeSet;
+}
+
+void UMyWidgetController::BindCallbacksToDependencies()
+{
 }
 
 void UMyWidgetController::BroadcastInitialValues()
 {
 }
-
-void UMyWidgetController::BindCallbackToDependencies()
-{
-}
-

@@ -8,9 +8,9 @@ public class Aura : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","GameplayAbilities","GameplayTags","GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","GameplayAbilities","EnhancedInput" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "EnhancedInput","NavigationSystem","Niagara" });
+		PrivateDependencyModuleNames.AddRange(new string[] {"NavigationSystem","Niagara","AIModule","GameplayTags","GameplayTasks"});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

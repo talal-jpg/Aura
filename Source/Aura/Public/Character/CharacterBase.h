@@ -3,71 +3,69 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "Interface/CombatInterface.h"
 #include "CharacterBase.generated.h"
 
 class UGameplayAbility;
 class UGameplayEffect;
-class UAbilitySystemComponent;
 class UAttributeSet;
-class UCameraComponent;
-class USpringArmComponent;
+class UAbilitySystemComponent;
 
-UCLASS()
-class AURA_API ACharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
+UCLASS(Abstract)
+class AURA_API ACharacterBase : public ACharacter , public ICombatInterface
 {
 	GENERATED_BODY()
 
 public:
 	ACharacterBase();
 
+	virtual FVector GetSocketLocation_Implementation(FName SocketName) override;
 protected:
+	virtual void BeginPlay() override;
 
-public:	
+public:
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	virtual FTaggedMontage GetTaggedAttackMontageStruct_Implementation() override;
+	
+	
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName WeaponTipSocketName;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
-	virtual FVector GetCombatSocketLocation()override;
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UAbilitySystemComponent* AbilitySystemComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UAttributeSet* AttributeSet;
-
-	
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-	// InitializeDefaultAttrs
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
-
+	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	
+	void GiveStartupAbilities();
+	
+	virtual void Die() override;
 
-	void InitializePrimaryAttributes();
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+	
 
-	void InitializeSecondaryAttributes();
-
-	void InitializeVitalAttributes();
-
+private:
 	virtual void InitializeDefaultAttributes();
 
-	void ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass);
-
-	virtual int GetPlayerLevel() override;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAnimMontage> HitReactMontage;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+	UPROPERTY(EditAnywhere)
+	TArray<FTaggedMontage> TaggedAttackMontages ;
 
-	void GiveStartUpAbilities();
 };

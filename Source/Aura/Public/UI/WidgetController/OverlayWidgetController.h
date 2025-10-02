@@ -4,77 +4,84 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "GAS/Data/DA_AbilityInfo.h"
+#include "UI/MyUserWidget.h"
 #include "UI/WidgetController/MyWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
-struct FOnAttributeChangeData;
-class UMyAttributeSet;
+class UDA_AbilityInfo;
+class UDA_AttributeInfo;
+class UMyAbilitySystemComponent;
+class UMyUserWidget;
 
 USTRUCT()
-struct FPopUpWidgetInfo: public FTableRowBase
+struct FPopupWidgetRow : public FTableRowBase
 {
 	GENERATED_BODY()
-	public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
-	FGameplayTag EffectMessageTag;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
-	FText Message;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
-	TSubclassOf<UUserWidget> Widget;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
-	UTexture2D* Image;
 	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	FGameplayTag MessageTag;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	FText MessageText;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UTexture2D* MessageImage;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	TSubclassOf<UMyUserWidget> PopUpUserWidgetClass;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangeDelegateSignature, float, Health);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangeDelegateSignature, float, MaxHealth );
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangeDelegateSignature, float, Mana );
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangeDelegateSignature, float, MaxMana );
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameplayEffectAppliedBroadcastPopUpWidgetInfoDelegateSignature, FPopUpWidgetInfo,PopUpWidgetInfo);
+class UMyAttributeSet;
 /**
  * 
  */
-UCLASS()
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangeBrodcastValDelegateSignature, float, NewValue);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEffectAppliedBroadcastPopupWidgetRowDelegateSignature, FPopupWidgetRow, PopupWidgetRow);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilitiesGivenBrodcastAbilityInfoDelegateSignature, FAbilityInfo, AbilityInfo);
+
+
+UCLASS(BlueprintType, Blueprintable)
 class AURA_API UOverlayWidgetController : public UMyWidgetController
 {
 	GENERATED_BODY()
 
-	public:
+public:
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangeBrodcastValDelegateSignature OnHealthChangeBroadcastValDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangeBrodcastValDelegateSignature OnMaxHealthChangeBroadcastValDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangeBrodcastValDelegateSignature OnManaChangeBroadcastValDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangeBrodcastValDelegateSignature OnMaxManaChangeBroadcastValDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnEffectAppliedBroadcastPopupWidgetRowDelegateSignature OnEffectAppliedBroadcastPopupWidgetRowDelegate;
+	
+	virtual void BindCallbacksToDependencies() override;
+
 	virtual void BroadcastInitialValues() override;
-	
-	virtual void BindCallbackToDependencies() override;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnHealthChangeDelegateSignature OnHealthChangeDelegate;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnMaxHealthChangeDelegateSignature OnMaxHealthChangeDelegate;
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnManaChangeDelegateSignature OnManaChangeDelegate;
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnMaxManaChangeDelegateSignature OnMaxManaChangeDelegate;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnGameplayEffectAppliedBroadcastPopUpWidgetInfoDelegateSignature OnGameplayEffectAppliedBroadcastPopUpWidgetInfoDelegate;
 
 	UPROPERTY()
 	UMyAttributeSet* MyAttributeSet;
 
 	UMyAttributeSet* GetMyAttributeSet();
 
-	void OnHeathChange(const FOnAttributeChangeData& HealthData);
-	void OnMaxHealthChange(const FOnAttributeChangeData& MaxHealthData);
-	void OnManaChange(const FOnAttributeChangeData& ManaData);
-	void OnMaxManaChange(const FOnAttributeChangeData& MaxManaData);
+	UPROPERTY(EditAnywhere)
+	UDataTable* PopUpWidgetInfo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UDataTable* DT_PopUpWidgetInfo;
-	
-	
+	void OnInitializeStartupAbilities(UMyAbilitySystemComponent* AbilitySystemComponent);
+
+	UPROPERTY(EditAnywhere)
+	UDA_AbilityInfo* DA_AbilityInfo;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAbilitiesGivenBrodcastAbilityInfoDelegateSignature OnAbilitiesGivenBroadcastAbilityInfoDelegate;
 };

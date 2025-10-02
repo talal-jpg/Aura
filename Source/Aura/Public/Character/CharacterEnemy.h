@@ -3,70 +3,89 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Data/CharacterClassInfo.h"
+#include "AbilitySystemInterface.h"
 #include "Character/CharacterBase.h"
+#include "Components/WidgetComponent.h"
+#include "GAS/Data/DA_DefaultEnemyAttributes.h"
 #include "Interface/CursorHitInterface.h"
-#include "UI/WidgetController/OverlayWidgetController.h"
 #include "CharacterEnemy.generated.h"
 
-enum class ECharacterClass : uint8;
+class AMyAIController;
+class UBehaviorTree;
+struct FGameplayTag;
 class UMyUserWidget;
-class UWidgetComponent;
+enum class ECharacterClass : uint8;
+class UGameplayEffect;
+
 /**
  * 
  */
-UCLASS(Blueprintable, BlueprintType)
-class AURA_API ACharacterEnemy : public ACharacterBase , public ICursorHitInterface   
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangeBroadcastNewValDelegateSignature, float , NewVal);
+UCLASS(BlueprintType)
+class AURA_API ACharacterEnemy : public ACharacterBase , public ICursorHitInterface ,public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-	public:
+public:
 	ACharacterEnemy();
 
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void Tick(float DeltaTime) override;
+	virtual void BeginPlay() override;
+	
 	virtual void Highlight() override;
 	virtual void UnHighlight() override;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHighlighted;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UWidgetComponent* WidgetComponent;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnHealthChangeDelegateSignature OnHealthChangeDelegate;
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnMaxHealthChangeDelegateSignature OnMaxHealthChangeDelegate;
-
-	UPROPERTY(BlueprintReadWrite)
-	UMyUserWidget* HealthBar;
-
-	UPROPERTY(EditAnywhere )
-	int PlayerLevel=1;
-	
-	virtual int GetPlayerLevel() override;
-
-	virtual void InitializeDefaultAttributes() override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ECharacterClass CharacterClass=ECharacterClass::Warrior;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Level=1;
-
-	UFUNCTION()
-	void HitReactGameplayTagChangedDelegateCallback(const FGameplayTag CallbackTag, int32 NewCount);
-
-	UPROPERTY(BlueprintReadOnly)
-	bool bHitReacting;
-
-	UPROPERTY(BlueprintReadOnly)
-	float BaseWalkSpeed=250;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	float BaseWalkSpeed=500.f;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGameplayAbility> HitReactAbilityClass;
+	ECharacterClass CharacterClass=ECharacterClass::Warrior;
+
+	void ApplyEffect(TSubclassOf<UGameplayEffect> GameplayEffectClass);
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float Level=1;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangeBroadcastNewValDelegateSignature OnHealthChangeBroadcastNewValDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangeBroadcastNewValDelegateSignature OnMaxHealthChangeBroadcastNewValDelegate;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Widget")
+	UWidgetComponent* HealthBarWidgetComp;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Widget")
+	UMyUserWidget* HealthBarUserWidget;
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable)
+	void BroadcastInitialValues();
+
+	void HitReactTagChanged(const FGameplayTag, int32 NewCount);
+	
+	bool bHitReacting=false;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AMyAIController> MyAIController;
+
+	UPROPERTY()
+	AActor* CombatTarget=nullptr;
+
+	virtual AActor* GetCombatTarget_Implementation() override;
+
+	virtual void SetCombatTarget_Implementation(AActor* NewCombatTarget) override;
+
+	virtual void Die() override;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	float LifeSpan=5.f;
 };
-
-

@@ -3,16 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
 
-class USplineComponent;
-struct FGameplayTag;
-class UDA_InputConfig;
+class UNavigationPath;
 class ICursorHitInterface;
-struct FInputActionValue;
-class UInputAction;
+class UDA_InputConfig;
+struct FGameplayTag;
 class UInputMappingContext;
+class UInputAction;
+class USplineComponent;
+
 /**
  * 
  */
@@ -20,47 +22,61 @@ UCLASS()
 class AURA_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
-	public:
 	AMyPlayerController();
 	
-	virtual void SetupInputComponent() override;
-
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere,Category = "Input")
-	TObjectPtr<UInputMappingContext> PlayerInputMappingContext;
+	virtual void SetupInputComponent() override;
 
-	UPROPERTY(EditAnywhere,Category = "Input")
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputMappingContext> Player_InputMappingContext;
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> IA_Move;
 
-	UPROPERTY(EditAnywhere,Category = "Input")
-	const UDA_InputConfig* DA_InputConfig;
 
-	void Move(const FInputActionValue& Value);
+	UFUNCTION()
+	void Move(const FInputActionValue& Val);
 
-	void AutoMove();
 
-	void CursorTrace();
+	void InputPressedFunc(FGameplayTag InputTag);
 
-	void InputPressed( FGameplayTag InputTag);
-	void InputHeld( FGameplayTag InputTag);
-	void InputReleased( FGameplayTag InputTag);
+	void InputHeldFunc(FGameplayTag InputTag);
+
+	void InputReleasedFunc(FGameplayTag InputTag);
+
+	UPROPERTY(EditAnywhere)
+	UDA_InputConfig* DA_InputConfig=nullptr;
 
 	ICursorHitInterface* ThisActor=nullptr;
 	ICursorHitInterface* LastActor=nullptr;
+	
+	UPROPERTY()
+	USplineComponent* SplineComponent;
+
+	UPROPERTY()
+	FVector CachedLocation=FVector::ZeroVector;
+
+	void CursorTrace();
+
+	void AutoMove();
 
 	bool bIsTargeting=false;
 
-	float HeldTime=0;
-	float ShortPressThreshold=.5f;
-	FVector CachedDestination=FVector::ZeroVector;
-	float AcceptableDistance=120.f;
-	bool bIsAutoMoving=false;
+	FHitResult HitResult;
 
-	
-	
-	UPROPERTY()
-	USplineComponent* Spline;
+	float HeldTime=0.0f;
+	float ShortPressThreshold=.5f;
+	bool bIsAutoRunning=false;
+	float DistanceThreshold=110.f;
+
+	public:
+	int foo=0;
+
+	UPROPERTY(EditAnywhere)
+	UNavigationPath* NavPath=nullptr;
 	
 };
+

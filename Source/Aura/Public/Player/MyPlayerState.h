@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemInterface.h"
 #include "GameFramework/PlayerState.h"
 #include "MyPlayerState.generated.h"
 
@@ -13,18 +12,18 @@ class UAbilitySystemComponent;
  * 
  */
 UCLASS()
-class AURA_API AMyPlayerState : public APlayerState , public IAbilitySystemInterface
+class AURA_API AMyPlayerState : public APlayerState
 {
 	GENERATED_BODY()
+
 	public:
 	AMyPlayerState();
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MyPlayerState")
-	UAbilitySystemComponent* AbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MyPlayerState")
-	UAttributeSet* AttributeSet;
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	
+	virtual void BeginPlay() override;
 };

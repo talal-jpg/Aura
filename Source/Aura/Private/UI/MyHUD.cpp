@@ -3,44 +3,32 @@
 
 #include "UI/MyHUD.h"
 #include "Blueprint/UserWidget.h"
-#include "Kismet/GameplayStatics.h"
 #include "Player/MyPlayerState.h"
 #include "UI/MyUserWidget.h"
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
-UOverlayWidgetController* AMyHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
+void AMyHUD::InitOverlay()
 {
-	if (OverlayWidgetController == nullptr)
-	{
-		OverlayWidgetController=NewObject<UOverlayWidgetController>(WCParams.PlayerController,OverlayWidgetControllerClass);
-		OverlayWidgetController->SetWidgetControllerParams(WCParams);
-	}
-	return OverlayWidgetController;
+	OverlayWidgetController=NewObject<UOverlayWidgetController>(this,OverlayWidgetControllerClass);
+	APlayerController* PC = GetOwningPlayerController();
+	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(PC,OverlayUserWidgetClass));
+	AMyPlayerState* PS = PC->GetPlayerState<AMyPlayerState>();
+	UAbilitySystemComponent* ASC= PS->AbilitySystemComponent;
+	UAttributeSet* AS= PS->AttributeSet;
+	FWidgetControllerParams WCParams= FWidgetControllerParams(PC,PS,ASC,AS);
+	OverlayWidgetController->SetWidgetControllerParams(WCParams);
+	OverlayUserWidget->SetWidgetController(OverlayWidgetController);
+	OverlayWidgetController->BindCallbacksToDependencies();
+	OverlayWidgetController->BroadcastInitialValues();
+	OverlayUserWidget->AddToViewport();
 }
 
-UAttributeMenuWidgetController* AMyHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+UAttributeMenuWidgetController* AMyHUD::GetAttributeMenuWidgetController() const
 {
-	if (AttributeMenuWidgetController== nullptr)
+	if (!AttributeMenuWidgetController)
 	{
-		AttributeMenuWidgetController=NewObject<UAttributeMenuWidgetController>(WCParams.PlayerController,AttributeMenuWidgetControllerClass);
-		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		AttributeMenuWidgetController=NewObject<UAttributeMenuWidgetController>(GetOwningPlayerController(),AttributeMenuWidgetControllerClass);
 	}
 	return AttributeMenuWidgetController;
 }
-
-void AMyHUD::InitOverlay(const FWidgetControllerParams& Params )
-{
-	FWidgetControllerParams WCParams= FWidgetControllerParams(Params);
-	OverlayUserWidget=Cast<UMyUserWidget>(CreateWidget<UUserWidget>(Params.PlayerController,OverlayUserWidgetClass));
-	OverlayUserWidget->SetWidgetController(GetOverlayWidgetController(WCParams));
-	OverlayUserWidget->AddToViewport();
-	GetOverlayWidgetController(WCParams)->BroadcastInitialValues();
-	GetOverlayWidgetController(WCParams)->BindCallbackToDependencies();
-}
-
-void AMyHUD::BeginPlay()
-{
-	Super::BeginPlay();
-}
-

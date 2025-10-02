@@ -6,59 +6,55 @@
 #include "UObject/NoExportTypes.h"
 #include "MyWidgetController.generated.h"
 
-class UAbilitySystemComponent;
 class UAttributeSet;
-/**
- * 
- */
+class UAbilitySystemComponent;
+
 USTRUCT()
 struct FWidgetControllerParams
 {
 	GENERATED_BODY()
-	public:
-	
 	FWidgetControllerParams(){};
-	FWidgetControllerParams(APlayerController* PC,APlayerState* PS,UAbilitySystemComponent* ASC,UAttributeSet* AS ): PlayerController(PC),PlayerState(PS), AbilitySystemComponent(ASC), AttributeSet(AS)
-	{
-	};
+	FWidgetControllerParams(APlayerController* PC,APlayerState* PS,UAbilitySystemComponent* ASC,UAttributeSet* AS):PlayerController(PC),PlayerState(PS),AbilitySystemComponent(ASC),AttributeSet(AS)
+	{};
+	public:
 	UPROPERTY()
 	APlayerController* PlayerController;
 
 	UPROPERTY()
 	APlayerState* PlayerState;
-	
+
 	UPROPERTY()
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
 	UAttributeSet* AttributeSet;
-
 };
-UCLASS(Blueprintable, BlueprintType)
+/**
+ * 
+ */
+UCLASS()
 class AURA_API UMyWidgetController : public UObject
 {
+public:
 	GENERATED_BODY()
-
-	public:
-	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void WidgetControllerParamsSet();
-
-	UPROPERTY()
-	UAbilitySystemComponent* AbilitySystemComponent;
-
-	UPROPERTY()
-	UAttributeSet* AttributeSet;
 
 	UPROPERTY()
 	APlayerController* PlayerController;
 
 	UPROPERTY()
 	APlayerState* PlayerState;
+	
+	UPROPERTY()
+	UAbilitySystemComponent* AbilitySystemComponent;
 
-	protected:
+	UPROPERTY()
+	UAttributeSet* AttributeSet;
+	
+	void SetWidgetControllerParams(const FWidgetControllerParams& Params);
+
+	virtual void BindCallbacksToDependencies();
+
 	virtual void BroadcastInitialValues();
 
-	virtual void BindCallbackToDependencies();
+	
 };

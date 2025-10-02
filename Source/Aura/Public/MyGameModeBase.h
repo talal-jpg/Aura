@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "MyGameModeBase.generated.h"
 
-class UCharacterClassInfo;
+class UDA_DefaultEnemyAttributes;
 /**
  * 
  */
@@ -15,11 +15,9 @@ class AURA_API AMyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
+
 	public:
-	// UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
-	// TObjectPtr<UCharacterClassInfo> DA_CharacterClassInfo;
-
-
-	UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
-	UCharacterClassInfo* DA_CharacterClassInfo;
+	UPROPERTY(EditAnywhere)
+	UDA_DefaultEnemyAttributes* DefaultEnemyAttributesInfo;
+	
 };

@@ -9,12 +9,18 @@
  * 
  */
 
-struct FMyGameplayTags
+struct FMyGameplayTags 
 {
+	
 	public:
-	static FMyGameplayTags& Get(){return GameplayTags;};
+	static FMyGameplayTags& Get() ;
+
+	bool bIsInitialized=false;
 
 	static void InitializeGameplayTags();
+
+	// Cooldown
+	FGameplayTag Cooldown_Fire_FireBolt;
 
 	// VitalAttributes
 	FGameplayTag Attribute_Vital_Health;
@@ -44,12 +50,15 @@ struct FMyGameplayTags
 	
 	FGameplayTag Input_LMB;
 
+// MessageTags
 	FGameplayTag Message_HealthPotion;
 	FGameplayTag Message_ManaPotion;
 	FGameplayTag Message_Fire;
-	
 
-	private:
-	protected:
+	// AbilityTags
+	FGameplayTag Ability_Firebolt;
+
+	FGameplayTag Event_XpGiven;
+	// protected:
 	static FMyGameplayTags GameplayTags;
 };

@@ -5,15 +5,12 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
-#include "Kismet/KismetStringLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
-#include "Runtime/Engine/Internal/Kismet/BlueprintTypeConversions.h"
 
 // Sets default values
 AMyEffectActor::AMyEffectActor()
 {
-	MyRootComponent=CreateDefaultSubobject<USceneComponent>("RootComponent");
-	SetRootComponent(MyRootComponent);
+	
+
 }
 
 // Called when the game starts or when spawned
@@ -25,59 +22,58 @@ void AMyEffectActor::BeginPlay()
 
 void AMyEffectActor::OnOverlap(AActor* OtherActor)
 {
-	if ( IAbilitySystemInterface* OtherActorAsASI = Cast<IAbilitySystemInterface>(OtherActor))
+	if (ApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
-		UAbilitySystemComponent* OtherActorsAsc=OtherActorAsASI->GetAbilitySystemComponent();
-		if (EffectApplicationPolicy==EEffectApplicationPolicy::ApplyOnOverlap)
+		IAbilitySystemInterface* ASI= Cast<IAbilitySystemInterface>(OtherActor);
+		if (!ASI) return;
+		 UAbilitySystemComponent* ASC= ASI->GetAbilitySystemComponent();
+		// if (!ASC->GetAvatarActor()->HasAuthority())return;
+		FGameplayEffectContextHandle EffectContextHandle=ASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		FGameplayEffectSpecHandle EffectSpecHandle=ASC->MakeOutgoingSpec(GameplayEffectClass,1,EffectContextHandle);
+		FActiveGameplayEffectHandle ActiveEffectHandle=ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		
+		ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		if (GameplayEffectClass.GetDefaultObject()->DurationPolicy==EGameplayEffectDurationType::Infinite && ASC)
 		{
-			FGameplayEffectContextHandle ContextHandle;
-			if (!GameplayEffectClass)
-			{
-				UKismetSystemLibrary::PrintString(this,"PleaseAddGameplayEffectClassForTheEffectToApply");
-				return;
-			};
-			FGameplayEffectSpecHandle GESpecHandle = OtherActorsAsc->MakeOutgoingSpec(GameplayEffectClass, 1, ContextHandle);
-			FGameplayEffectSpec* GESpec = GESpecHandle.Data.Get();
-			
-			FActiveGameplayEffectHandle ActiveGameplayEffectHandle=OtherActorsAsc->ApplyGameplayEffectSpecToSelf(*GESpec);
-			if (GESpec->Def->DurationPolicy==EGameplayEffectDurationType::Infinite)
-			{
-				ActiveGameplayEffectHandles.Add(ActiveGameplayEffectHandle,OtherActorsAsc);
-			}
+			ActiveEffectHandles.Add(ActiveEffectHandle,ASC);
 		}
 	}
+
 }
 
 void AMyEffectActor::OnEndOverlap(AActor* OtherActor)
 {
-	if ( IAbilitySystemInterface* OtherActorAsASI = Cast<IAbilitySystemInterface>(OtherActor))
+	if (ApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
-		UAbilitySystemComponent* OtherActorsAsc=OtherActorAsASI->GetAbilitySystemComponent();
-		if (EffectRemovalPolicy== EEffectRemovalPolicy::RemoveOnEndOverlap)
-		{
-			TArray<FActiveGameplayEffectHandle> HandlesToRemove;
-			for (auto ActiveGameplayEffectHandle : ActiveGameplayEffectHandles)
-			{
-				if (ActiveGameplayEffectHandle.Value==OtherActorsAsc)
-				{
-					OtherActorsAsc->RemoveActiveGameplayEffect(ActiveGameplayEffectHandle.Key);
-					HandlesToRemove.Add(ActiveGameplayEffectHandle.Key);
-				}
-			}
+	}
+	if (RemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
+	{
+		
+		IAbilitySystemInterface* ASI= Cast<IAbilitySystemInterface>(OtherActor);
+		if (!ASI) return;
+		UAbilitySystemComponent* ASC= ASI->GetAbilitySystemComponent();
 
-			for (auto Handle : HandlesToRemove)
+		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
+		for (auto Handle : ActiveEffectHandles)
+		{
+			if (ASC== Handle.Value)
 			{
-				ActiveGameplayEffectHandles.Remove(Handle);
+				ASC->RemoveActiveGameplayEffect(Handle.Key);
+				HandlesToRemove.Add(Handle.Key);
 			}
 		}
-		if (EffectApplicationPolicy==EEffectApplicationPolicy::ApplyOnEndOverlap)
+		for (auto HandleToRemove : HandlesToRemove)
 		{
-			FGameplayEffectContextHandle ContextHandle;
-			FGameplayEffectSpecHandle GESpecHandle = OtherActorsAsc->MakeOutgoingSpec(GameplayEffectClass, ActorLevel, ContextHandle);
-			FGameplayEffectSpec* GESpec = GESpecHandle.Data.Get();
-			
-			FActiveGameplayEffectHandle ActiveGameplayEffectHandle=OtherActorsAsc->ApplyGameplayEffectSpecToSelf(*GESpec);
+			ActiveEffectHandles.FindAndRemoveChecked(HandleToRemove);
 		}
+	}
+}
+
+void AMyEffectActor::ApplyEffect(AActor* OtherActor)
+{
+	if (IAbilitySystemInterface* AbilitySystemInterface= Cast<IAbilitySystemInterface>(OtherActor))
+	{
 	}
 }
 

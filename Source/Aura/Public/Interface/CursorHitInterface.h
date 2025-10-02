@@ -24,5 +24,4 @@ class AURA_API ICursorHitInterface
 public:
 	virtual void Highlight()=0;
 	virtual void UnHighlight()=0;
-	
 };

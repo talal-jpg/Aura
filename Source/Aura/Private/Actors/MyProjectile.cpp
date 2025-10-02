@@ -3,77 +3,46 @@
 
 #include "Actors/MyProjectile.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "Components/SphereComponent.h"
-#include "NiagaraFunctionLibrary.h"
-#include "Aura/Aura.h"
-#include "Components/AudioComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMyProjectile::AMyProjectile()
 {
-	PrimaryActorTick.bCanEverTick=false;
-	bReplicates=true;
-	SphereComponent=CreateDefaultSubobject<USphereComponent>("SphereComponent");
-	SphereComponent->SetCollisionObjectType(ECC_Projectile);
-	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	SphereComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
-	SphereComponent->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Overlap);
-	SphereComponent->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
-	SphereComponent->SetCollisionResponseToChannel(ECC_Pawn,ECR_Overlap);
+	ProjectileSphere= CreateDefaultSubobject<USphereComponent>("SphereComponent");
+	ProjectileSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	ProjectileSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
+	ProjectileSphere->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
+	ProjectileSphere->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Overlap);
+	ProjectileSphere->SetCollisionResponseToChannel(ECC_Pawn,ECR_Overlap);
 	
-	ProjectileMovementComp=CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
-	ProjectileMovementComp->InitialSpeed=550.f;
-	ProjectileMovementComp->MaxSpeed=550.f;
-	ProjectileMovementComp->ProjectileGravityScale=0.f;
+	ProjectileMovementComponent=CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
+	ProjectileMovementComponent->InitialSpeed=400;
+	ProjectileMovementComponent->MaxSpeed=550;
+	ProjectileMovementComponent->ProjectileGravityScale=0;
 
 }
+
 
 // Called when the game starts or when spawned
 void AMyProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	SetLifeSpan(LifeSpan);
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnSphereOverlapCallBack);
-
-	LoopingSoundComponent=UGameplayStatics::SpawnSoundAttached(LoopingSound,GetRootComponent());
-}
-
-void AMyProjectile::OnSphereOverlapCallBack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-	bool bFromSweep, const FHitResult& SweepResult)
-{
-
-	UGameplayStatics::PlaySoundAtLocation(this,ImpactSound,GetActorLocation());
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
-	LoopingSoundComponent->Stop();
-	if (HasAuthority())
-	{
-		if (UAbilitySystemComponent* TargetAsc=UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-		{
-			TargetAsc->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-			TargetAsc->ApplyGameplayEffectSpecToSelf(*HitReactEffectSpecHandle.Data.Get());
-		}
-		Destroy();
-	}
-	else
-	{
-		bHit=true;
-	}
+	ProjectileSphere->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::AMyProjectile::OnSphereOverlapCallBack);
+	
 	
 }
-
-void AMyProjectile::Destroyed()
+void AMyProjectile::OnSphereOverlapCallBack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!bHit && !HasAuthority())
+	UGameplayStatics::PlaySoundAtLocation(this,HitSound,OtherActor->GetActorLocation());
+	IAbilitySystemInterface* ASI=Cast<IAbilitySystemInterface>(OtherActor);
+	if (ASI)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this,ImpactSound,GetActorLocation());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
-		LoopingSoundComponent->Stop();
+		ASI->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(DamageGESpec);
 	}
-	Super::Destroyed();
+	Destroy();
 }
-
-

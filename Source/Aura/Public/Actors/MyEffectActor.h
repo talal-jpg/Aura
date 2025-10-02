@@ -3,34 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "GameFramework/Actor.h"
-#include "ActiveGameplayEffectHandle.h"
 #include "MyEffectActor.generated.h"
 
-class UAbilitySystemComponent;
 class UGameplayEffect;
 
-UENUM(Blueprintable)
+UENUM()
 enum class EEffectApplicationPolicy : uint8
 {
-	ApplyOnOverlap UMETA(DisplayName = "ApplyOnOverlap"),
-	ApplyOnEndOverlap UMETA(DisplayName = "ApplyOnEndOverlap"),
-	DoNotApply UMETA(DisplayName = "DonotApply"),
-	
-};
-UENUM(Blueprintable)
-enum class EEffectRemovalPolicy:uint8
-{
-	RemoveOnOverlap UMETA(DisplayName = "RemoveOnOverlap"),
-	RemoveOnEndOverlap UMETA(DisplayName = "RemoveOnEndOverlap")
+	ApplyOnOverlap,
+	ApplyOnEndOverlap
 };
 
-UENUM(Blueprintable)
-enum class EEffectDurationType : uint8
+UENUM()
+enum class EEffectRemovalPolicy
 {
-	InstantEffect UMETA(DisplayName = "InstantEffect"),
-	DurationEffect UMETA(DisplayName = "DurationEffect"),
-	InfiniteEffect UMETA(DisplayName = "InfiniteEffect")
+	RemoveOnOverlap,
+	RemoveOnEndOverlap
 };
 
 UCLASS()
@@ -46,10 +36,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USceneComponent> MyRootComponent;
+public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnOverlap(AActor* OtherActor);
@@ -57,22 +44,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnEndOverlap(AActor* OtherActor);
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> GameplayEffectClass;
 
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
-	EEffectApplicationPolicy EffectApplicationPolicy;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GE")
-	EEffectRemovalPolicy EffectRemovalPolicy;
-
-
-	UPROPERTY(BlueprintReadWrite)
-	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveGameplayEffectHandles;
+	UPROPERTY(EditAnywhere)
+	EEffectApplicationPolicy ApplicationPolicy = EEffectApplicationPolicy::ApplyOnOverlap;
 
 	UPROPERTY(EditAnywhere)
-	int32 ActorLevel=1;
-	
+	EEffectRemovalPolicy RemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
 
+
+	void ApplyEffect(AActor* OtherActor);
+
+	UPROPERTY(BlueprintReadOnly)
+	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 };

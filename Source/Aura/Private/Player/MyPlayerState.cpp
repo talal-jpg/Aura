@@ -2,19 +2,18 @@
 
 
 #include "Player/MyPlayerState.h"
-#include "AbilitySystem/MyAbilitySystemComponent.h"
-#include "AbilitySystem/MyAttributeSet.h"
+
+#include "GAS/MyAbilitySystemComponent.h"
+#include "GAS/MyAttributeSet.h"
 
 AMyPlayerState::AMyPlayerState()
 {
-	AbilitySystemComponent=CreateDefaultSubobject<UMyAbilitySystemComponent>("AbilitySystemComponent");
-	AttributeSet= CreateDefaultSubobject<UMyAttributeSet>("AttributeSet");
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-	SetReplicates(true);
+	AbilitySystemComponent=CreateDefaultSubobject<UMyAbilitySystemComponent>(FName("AbilitySystemComponent"));
+	AttributeSet = CreateDefaultSubobject<UMyAttributeSet>(FName("AttributeSet"));
 }
 
-UAbilitySystemComponent* AMyPlayerState::GetAbilitySystemComponent() const
+void AMyPlayerState::BeginPlay()
 {
-	return AbilitySystemComponent;
+	Super::BeginPlay();
+	
 }

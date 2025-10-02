@@ -3,71 +3,136 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
-#include "AbilitySystem/MyAbilitySystemComponent.h"
-#include "AbilitySystem/MyAttributeSet.h"
-#include "AbilitySystem/MyGameplayTags.h"
+#include <string>
+
+#include "AbilitySystemComponent.h"
+#include "GameplayTagsManager.h"
+#include "GAS/MyAbilitySystemComponent.h"
+#include "GAS/MyAttributeSet.h"
+#include "GAS/Data/DA_AbilityInfo.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-void UOverlayWidgetController::BroadcastInitialValues()
+void UOverlayWidgetController::BindCallbacksToDependencies()
 {
-	OnHealthChangeDelegate.Broadcast(GetMyAttributeSet()->GetHealth());
-	OnMaxHealthChangeDelegate.Broadcast(GetMyAttributeSet()->GetMaxHealth());
-	OnManaChangeDelegate.Broadcast(GetMyAttributeSet()->GetMana());
-	OnMaxManaChangeDelegate.Broadcast(GetMyAttributeSet()->GetMaxMana());
-}
-
-void UOverlayWidgetController::BindCallbackToDependencies()
-{
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetHealthAttribute()).AddUObject(this,&ThisClass::OnHeathChange);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetMaxHealthAttribute()).AddUObject(this,&ThisClass::OnMaxHealthChange);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetManaAttribute()).AddUObject(this,&ThisClass::OnManaChange);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetMaxManaAttribute()).AddUObject(this,&ThisClass::OnMaxManaChange);
-
-	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->OnGameplayEffectAppliedBroadcastAssetTagsDelegate.AddLambda(
-		[this](FGameplayTagContainer GEAssetTags)
+	// float val= GetMyAttributeSet()->GetHealth();
+	// UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("Healthis%f"),val));
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
 		{
-			for (FGameplayTag AssetTag : GEAssetTags)
-			{
+			float Val=Data.NewValue;
+			OnHealthChangeBroadcastValDelegate.Broadcast(Val);
+		}
+		);
 
-				FName RowName= AssetTag.GetTagName();
-				FPopUpWidgetInfo* PopUpWidgetInfo=DT_PopUpWidgetInfo->FindRow<FPopUpWidgetInfo>(RowName,TEXT(""));
-				OnGameplayEffectAppliedBroadcastPopUpWidgetInfoDelegate.Broadcast(*PopUpWidgetInfo);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetMaxHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+
+			float Val=Data.NewValue;
+			OnMaxHealthChangeBroadcastValDelegate.Broadcast(Val);
+		}
+
+	);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetManaAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			float Val=Data.NewValue;
+			OnManaChangeBroadcastValDelegate.Broadcast(Val);
+		}
+	);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMyAttributeSet()->GetMaxManaAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			float Val=Data.NewValue;
+			OnMaxManaChangeBroadcastValDelegate.Broadcast(Val);
+		}
+	);
+	
+	// AbilitySystemComponent->OnGameplayEffectAppliedDelegateToSelf.AddLambda(
+	// 	[this](UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle)
+	// 	{
+	// 		FGameplayTagContainer TagContainer;
+	// 		EffectSpec.GetAllAssetTags(TagContainer);
+	// 		for (const FGameplayTag& Tag : TagContainer)
+	// 		{
+	// 			FPopupWidgetRow* PopupWidgetRow = PopUpWidgetInfo->FindRow<FPopupWidgetRow>(Tag.GetTagName(), FString());
+	// 			if (PopupWidgetRow)
+	// 			{
+	// 				OnEffectAppliedBroadcastPopupWidgetRowDelegate.Broadcast(*PopupWidgetRow);
+	// 			}
+	// 			else
+	// 			{
+	// 				UKismetSystemLibrary::PrintString(this,"Didn't find PopupWidgetRow");
+	// 			}
+	// 		}
+	// 	}
+	// 	);
+	UMyAbilitySystemComponent* MyASC=Cast<UMyAbilitySystemComponent>(AbilitySystemComponent);
+	if (MyASC->bStartupAbilitiesGiven)
+	{
+		OnInitializeStartupAbilities(MyASC);
+	}
+	else
+	{
+		MyASC->OnAbilitiesGivenDelegate.AddUObject(this,&UOverlayWidgetController::OnInitializeStartupAbilities);
+	}
+
+	MyASC->OnGameplayEffectAppliedBroadcastAssetTagsDelegate.AddLambda(
+		[this](FGameplayTagContainer& TagContainer)
+		{
+
+			float Health=GetMyAttributeSet()->GetHealth();
+			for (const FGameplayTag& Tag : TagContainer)
+			{
+				FPopupWidgetRow* PopupWidgetRow = PopUpWidgetInfo->FindRow<FPopupWidgetRow>(Tag.GetTagName(), FString(""));
+				if (PopupWidgetRow)
+				{
+					OnEffectAppliedBroadcastPopupWidgetRowDelegate.Broadcast(*PopupWidgetRow);
+				}
+				else
+				{
+					UKismetSystemLibrary::PrintString(this,"PopupWidgetRowNotFound");
+				}
+				
 			}
 		}
 	);
+
+}
+
+void UOverlayWidgetController::BroadcastInitialValues()
+{
+	OnHealthChangeBroadcastValDelegate.Broadcast(GetMyAttributeSet()->GetHealth());
+	OnMaxHealthChangeBroadcastValDelegate.Broadcast(GetMyAttributeSet()->GetMaxHealth());
+	OnManaChangeBroadcastValDelegate.Broadcast(GetMyAttributeSet()->GetMana());
+	OnMaxManaChangeBroadcastValDelegate.Broadcast(GetMyAttributeSet()->GetMaxMana());
 }
 
 UMyAttributeSet* UOverlayWidgetController::GetMyAttributeSet()
 {
 	if (!MyAttributeSet)
 	{
-		MyAttributeSet=Cast<UMyAttributeSet>(AttributeSet);
+		MyAttributeSet = Cast<UMyAttributeSet>(AttributeSet);
 	}
 	return MyAttributeSet;
 }
 
-void UOverlayWidgetController::OnHeathChange(const FOnAttributeChangeData& HealthData)
+void UOverlayWidgetController::OnInitializeStartupAbilities(UMyAbilitySystemComponent* AbilitySystemComponent)
 {
+	if (!AbilitySystemComponent->bStartupAbilitiesGiven)return;
 
-	float NewHealth=HealthData.NewValue;
-	OnHealthChangeDelegate.Broadcast(NewHealth);
+	FOnAbilitiesGivenLoopAllAndBroadcastSpecDelegateSignature OnAbilitiesGivenLoopAllAndBroadcastSpecDelegate;
+	OnAbilitiesGivenLoopAllAndBroadcastSpecDelegate.BindLambda(
+		[this](FGameplayAbilitySpec AbilitySpec)
+		{
+			const FGameplayTag& AbilityTag=UMyAbilitySystemComponent::FindAbilityTagFromSpec(AbilitySpec,UGameplayTagsManager::Get().RequestGameplayTag(FName("Ability")));
+			FAbilityInfo AbilityInfo=DA_AbilityInfo->FindAbilityInfoForTag(AbilityTag,true);
+			AbilityInfo.InputTag= UMyAbilitySystemComponent::FindInputTagFromSpec(AbilitySpec,UGameplayTagsManager::Get().RequestGameplayTag(FName("Input")));
+			OnAbilitiesGivenBroadcastAbilityInfoDelegate.Broadcast(AbilityInfo);
+		}
+		);
+	
+	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->ForEachAbility(OnAbilitiesGivenLoopAllAndBroadcastSpecDelegate);
+	
 }
-
-void UOverlayWidgetController::OnMaxHealthChange(const FOnAttributeChangeData& MaxHealthData)
-{
-	float NewMaxHealth=MaxHealthData.NewValue;
-	OnMaxHealthChangeDelegate.Broadcast(NewMaxHealth);
-}
-
-void UOverlayWidgetController::OnManaChange(const FOnAttributeChangeData& ManaData)
-{
-	float NewMana=ManaData.NewValue;
-	OnManaChangeDelegate.Broadcast(NewMana);
-}
-
-void UOverlayWidgetController::OnMaxManaChange(const FOnAttributeChangeData& MaxManaData)
-{
-	float NewMaxMana=MaxManaData.NewValue;
-	OnMaxManaChangeDelegate.Broadcast(NewMaxMana);
-}
-

@@ -2,74 +2,80 @@
 
 
 #include "Character/CharacterBase.h"
-
 #include "AbilitySystemComponent.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "GameplayAbilitySpec.h"
+#include "Components/CapsuleComponent.h"
+#include "GAS/MyAbilitySystemComponent.h"
+#include "GAS/GameplayAbility/MyGameplayAbility.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
 {
 	WeaponMesh=CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
 	WeaponMesh->SetupAttachment(GetMesh(),FName("HandSocket"));
-	bReplicates = true;
+
 }
 
-FVector ACharacterBase::GetCombatSocketLocation()
+FVector ACharacterBase::GetSocketLocation_Implementation(FName SocketName)
 {
-	return WeaponMesh->GetSocketLocation(WeaponTipSocketName);
+	return WeaponMesh->GetSocketLocation(SocketName);
 }
 
-UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
+
+// Called when the game starts or when spawned
+void ACharacterBase::BeginPlay()
 {
-	return AbilitySystemComponent;
+	Super::BeginPlay();
+	
 }
 
-void ACharacterBase::InitializePrimaryAttributes()
+UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
 {
-	ApplyEffect(DefaultPrimaryAttributes);
+	return HitReactMontage;
 }
 
-void ACharacterBase::InitializeSecondaryAttributes()
+FTaggedMontage ACharacterBase::GetTaggedAttackMontageStruct_Implementation()
 {
-	ApplyEffect(DefaultSecondaryAttributes);
+	int32 NumElems=TaggedAttackMontages.Num();
+	FTaggedMontage TaggedMontage;
+	
+	for(int32 i=0;i<NumElems-1;i++)
+	{
+		int32 RandNum= FMath::RandRange(0,NumElems-1);
+		TaggedMontage= TaggedAttackMontages[RandNum];
+	}
+	return  TaggedMontage;
 }
 
-void ACharacterBase::InitializeVitalAttributes()
-{
-	ApplyEffect(DefaultVitalAttributes);
-}
+
 
 void ACharacterBase::InitializeDefaultAttributes()
 {
-	InitializePrimaryAttributes();
-	InitializeSecondaryAttributes();
-	InitializeVitalAttributes();
 }
 
-void ACharacterBase::ApplyEffect(TSubclassOf<UGameplayEffect> EffectClass)
+
+
+void ACharacterBase::GiveStartupAbilities()
 {
-	FGameplayEffectContextHandle EffectContextHandle=GetAbilitySystemComponent()->MakeEffectContext();
-	EffectContextHandle.AddSourceObject(this);
-	FGameplayEffectSpecHandle EffectSpecHandle=GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass, 1,EffectContextHandle);
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->AddStartupAbilities(StartupAbilities);
 }
 
-int ACharacterBase::GetPlayerLevel()
+void ACharacterBase::Die()
 {
-	int PlayerLevel=0;
-	return PlayerLevel;
+	WeaponMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld,true));
+	MulticastHandleDeath();
 }
 
-
-
-
-void ACharacterBase::GiveStartUpAbilities()
+void ACharacterBase::MulticastHandleDeath_Implementation()
 {
-	for (auto Ability : StartUpAbilities)
-	{
-		FGameplayAbilitySpec AbilitySpec=AbilitySystemComponent->BuildAbilitySpecFromClass(Ability);
-		FGameplayAbilitySpecHandle AbilitySpecHandle=AbilitySystemComponent->GiveAbility(AbilitySpec);
-	}
-}
+	WeaponMesh->SetSimulatePhysics(true);
+	WeaponMesh->SetEnableGravity(true);
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Block);
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
