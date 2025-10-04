@@ -13,6 +13,7 @@
 #include "AbilitySystem/MyGameplayTags.h"
 #include "Character/CharacterBase.h"
 #include "Character/CharacterEnemy.h"
+#include "Character/My_CharacterPlayer.h"
 #include "Interface/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -117,7 +118,7 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 				{
 					CombatInterface->Die();
 				}
-
+				if (Cast<AMy_CharacterPlayer>(Data.Target.GetAvatarActor()))return;
 				AMyGameModeBase* MyGameMOdeBase=Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(Data.Target.GetAvatarActor()));
 				UDA_DefaultEnemyAttributes* DefaultEnemyAttribs=MyGameMOdeBase->DefaultEnemyAttributesInfo;
 				ECharacterClass CharacterClass=Cast<ACharacterEnemy>(Data.Target.GetAvatarActor())->CharacterClass;

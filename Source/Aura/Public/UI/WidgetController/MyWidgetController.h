@@ -44,7 +44,7 @@ public:
 	UPROPERTY()
 	APlayerState* PlayerState;
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
